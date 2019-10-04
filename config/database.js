@@ -6,5 +6,8 @@ module.exports = {
         'password': 'Admin@123'
     },
 	'database': 'my_schema',
-    'users_table': 'users'
+    'users_table': 'users',
+    'table_class':'classes',
+    'table_demo_videos':'demo_videos',
+    'table_admin':'admin'
 };
