@@ -48,6 +48,7 @@ module.exports = function(app, passport) {
 		}));
 	  // return messages for signup users
 	  app.get('/signup/successjson', function(req, res) {
+		console.log(res);
 		connection.query("SELECT * FROM users WHERE username = 'rohit'", function(err, rows) {
 			if(!err) {
 				res.json({ message: 'Successfully created user',"data":rows[0] });

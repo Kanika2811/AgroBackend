@@ -34,7 +34,9 @@ module.exports = function(passport) {
             passReqToCallback : true
         },
         function(req, username, password, done) {
-            connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows) {
+
+            
+            connection.query("SELECT * FROM users WHERE email_id = ?",[req.body.email_id], function(err, rows) {
                 if (err)
                     return done(err);
                 if (rows.length) {
@@ -48,9 +50,9 @@ module.exports = function(passport) {
                         password: bcrypt.hashSync(password, bcrypt.genSaltSync(10))  // use the generateHash function in our user model
                     };
 
-                    var insertQuery = "INSERT INTO users ( username, password ) values (?,?)";
+                    var insertQuery = "INSERT INTO users ( username, password,email_id ) values (?,?,?)";
 
-                    connection.query(insertQuery,[newUserMysql.username, newUserMysql.password],function(err, rows) {
+                    connection.query(insertQuery,[newUserMysql.username, newUserMysql.password,req.body.email_id],function(err, rows) {
                         newUserMysql.id = rows.insertId;
 
                         return done(null, newUserMysql);
