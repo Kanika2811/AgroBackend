@@ -50,9 +50,9 @@ module.exports = function(passport) {
                         password: bcrypt.hashSync(password, bcrypt.genSaltSync(10))  // use the generateHash function in our user model
                     };
 
-                    var insertQuery = "INSERT INTO users ( username, password,email_id ) values (?,?,?)";
+                    var insertQuery = "INSERT INTO users ( username, password, email_id, name, contact_no, dob, guardian_name, guardian_contact_no, user_city, user_state, pincode, profile_image, school_name, user_class, board, medium, stream, interesting_subject, verified_key, isVideoPurchase,delete_flag ) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,0,0)";
 
-                    connection.query(insertQuery,[newUserMysql.username, newUserMysql.password,req.body.email_id],function(err, rows) {
+                    connection.query(insertQuery,[newUserMysql.username, newUserMysql.password, req.body.email_id, req.body.name, req.body.contact_no, req.body.dob, req.body.guardian_name, req.body.guardian_contact_no, req.body.user_city, req.body.user_state, req.body.pincode, req.body.profile_image, req.body.school_name, req.body.user_class, req.body.board, req.body.medium, req.body.stream, req.body.interesting_subject],function(err, rows) {
                         newUserMysql.id = rows.insertId;
 
                         return done(null, newUserMysql);
@@ -66,12 +66,12 @@ module.exports = function(passport) {
     passport.use(
         'local-login',
         new LocalStrategy({
-            usernameField : 'username',
+            usernameField : 'email_id',
             passwordField : 'password',
             passReqToCallback : true
         },
         function(req, username, password, done) {
-            connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows){
+            connection.query("SELECT * FROM users WHERE email_id = ?",[username], function(err, rows){
                 if (err)
                     return done(err);
                 if (!rows.length) {
