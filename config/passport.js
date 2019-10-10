@@ -34,29 +34,33 @@ module.exports = function(passport) {
             passReqToCallback : true
         },
         function(req, username, password, done) {
-            connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows) {
-                if (err)
-                    return done(err);
-                if (rows.length) {
-                    return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
-                } else {
+            // connection.query("SELECT * FROM users WHERE username = ?",[username], function(err, rows) {
+            //     if (err)
+            //         return done(err);
+            //     if (rows.length) {
+            //         return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
+            //     } else {
 
                     // if there is no user with that username then create the user
-
                     var newUserMysql = {
                         username: username,
                         password: bcrypt.hashSync(password, bcrypt.genSaltSync(10))  // use the generateHash function in our user model
                     };
+                    console.log("1");
 
                     var insertQuery = "INSERT INTO users ( username, password ) values (?,?)";
-
+                    console.log("2");
+console.log(newUserMysql.username);
                     connection.query(insertQuery,[newUserMysql.username, newUserMysql.password],function(err, rows) {
+                        if(err){
+                            console.log(err)
+                        }
                         newUserMysql.id = rows.insertId;
 
                         return done(null, newUserMysql);
                     });
-                }
-            });
+              //  }
+           // });
         })
     );
 
