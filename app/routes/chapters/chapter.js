@@ -7,7 +7,7 @@ dt.format('Y-m-d H:M:S');
 
 connection.query('USE ' + dbconfig.database);
 module.exports = function(app) {
-    app.get('/allclasses', function(req,res){
+    app.get('/selectchapter', function(req,res){
         connection.query("select * from classes", function(error,rows, fields){
             if(!!error)
                 console.log("error in this query");
@@ -16,7 +16,7 @@ module.exports = function(app) {
         });
     })
 
-    app.post('/insertClass',function(req,res){
+    app.post('/insertchapter',function(req,res){
         let addclass = {
             class_name:req.body.class_name,
             board:req.body.board,
@@ -33,7 +33,7 @@ module.exports = function(app) {
         });
     })
 
-    app.put('/editclass',function(req,res){
+    app.put('/editchapter',function(req,res){
         let editclass = {
             class_name:req.body.class_name,
             board:req.body.board,
@@ -49,7 +49,7 @@ module.exports = function(app) {
         });
     })
 
-    app.delete('/deleteclass',function(req,res){
+    app.delete('/deletechapter',function(req,res){
         connection.query('DELETE FROM classes WHERE id=?',[req.body.id],function(err,rows,fields){
             if(!!err){ console.log('error in this query'+err)}
             else{
