@@ -43,18 +43,16 @@ module.exports = function(app, passport) {
 	// process the login form
 	app.post('/login',function(req,res,next){
 		passport.authenticate('local-login', function(err,user,req) {
-		if (err) { 
-			return res.json({"success":false,"Message":err}); 
+		if (err) {
+			return res.json({"success":false,"Message":err});
 		}
-		if (!user) { 
-			return res.json({"success":false,"Message":"User Not Found!!!!"}); 
+		if (!user) {
+			return res.json({"success":false,"Message":"User Not Found!!!!"});
 		}
 		else {
 			 return res.json({"success":true,"message":"User login successfully","data":user});}
 	  })(req,res,next)
 	});
-
-	
 
 	app.post('/signup', passport.authenticate('local-signup', {
 		successRedirect : '/signup/successjson',
