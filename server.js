@@ -41,5 +41,8 @@ app.use('/api',test);
 
 require('./app/routes/user/user.js')(app, passport); // load our routes and pass in our app and fully configured passport
 require('./app/routes/classes/class.js')(app);
+require('./app/routes/chapters/chapter.js')(app);
+require('./app/routes/subjects/subject.js')(app);
+require('./app/routes/topics/topic.js')(app);
 app.listen(port);
 console.log('The magic happens on port ' + port);
