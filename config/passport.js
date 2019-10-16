@@ -52,16 +52,16 @@ module.exports = function(passport) {
                     }
                    
                     sendOtp.send(username, "MRB",otp, function (error, data) {
+                        console.log("1")
                         jwt.sign({user},'SuperSecRetKey', { expiresIn: 60 }, (err, token) => {
                           if(!err){
-                            var insertQuery = "INSERT INTO users (name,user_class,dob, password, email_id, contact_no,otp,token) values (?,?,?,?,?,?,?,?)";
-                            connection.query(insertQuery,[req.body.name,req.body.user_class,req.body.dob,newUserMysql.password, req.body.email_id, req.body.contact_no,otp,token],function(err, rows) {
-                                if(err){
-                                    return;
-                                }
+                            console.log(req.body.dob)
+                            var insertQuery = "INSERT INTO users (name,user_class,dob, password, email_id, contact_no,otp,token,user_city,user_state) values (?,?,?,?,?,?,?,?,?,?)";
+                            connection.query(insertQuery,[req.body.name,req.body.user_class,req.body.dob,newUserMysql.password, req.body.email_id,req.body.contact_no,otp,token,req.body.user_city,req.body.user_state],function(err, rows) {
+                                console.log(err)
                                 newUserMysql.id = rows.insertId;
                                 newUserMysql.email_id=req.body.email_id;
-                                return done(null, newUserMysql);
+                                return done(null, rows[0]);
     
                             });
                           }
