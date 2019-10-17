@@ -50,7 +50,7 @@ module.exports = function(passport) {
                         contact_no: username,
                         email_id: req.body.email_id
                     }
-                   
+
                     sendOtp.send(username, "MRB",otp, function (error, data) {
                         console.log("1")
                         jwt.sign({user},'SuperSecRetKey', { expiresIn: 60 }, (err, token) => {
@@ -66,9 +66,7 @@ module.exports = function(passport) {
                             });
                           }
                         });
-                        
                       });
-                    
                 }
             });
         })
@@ -80,7 +78,7 @@ module.exports = function(passport) {
         new LocalStrategy({
             usernameField : 'contact_no',
             passwordField : 'password',
-            passReqToCallback : true,failureFlash : true 
+            passReqToCallback : true,failureFlash : true
         },
         function(req, username, password, done) {
             connection.query("SELECT * FROM users WHERE contact_no = ?",[req.body.contact_no], function(err, rows){
@@ -101,7 +99,7 @@ module.exports = function(passport) {
 };
 
 function generate(n) {
-    var add = 1, max = 12 - add;   
+    var add = 1, max = 12 - add;
     if ( n > max ) {
             return generate(max) + generate(n - max);
     }
@@ -109,5 +107,5 @@ function generate(n) {
     var min    = max/10;
     var number = Math.floor( Math.random() * (max - min + 1) ) + min;
 
-    return ("" + number).substring(add); 
+    return ("" + number).substring(add);
 }

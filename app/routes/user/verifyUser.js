@@ -36,7 +36,6 @@ router.post('/test', async (req, res) => {
 
 });
 router.post('/verify', (req, res) => {
-    const bearerHeader = req.headers['authorization'];
     
     //Check if there is  a header
    

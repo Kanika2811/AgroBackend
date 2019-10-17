@@ -10,10 +10,11 @@ var morgan = require('morgan');
 var app      = express();
 var port     = process.env.PORT || 8080;
 const verifyUser = require('./app/routes/user/verifyUser.js');
+const userClass = require('./app/routes/UserClass/UserClass.js')
 var passport = require('passport');
 var flash    = require('connect-flash');
 
-
+const apiVersion = '/api/v1'
 require('./config/passport')(passport); // pass passport for configuration
 
 
@@ -36,8 +37,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
-app.use('/api/v1',verifyUser);
+app.use(apiVersion,verifyUser);
+app.use(apiVersion,userClass);
+
 
 require('./app/routes/user/user.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./app/routes/chapters/chapter.js')(app);
+require('./app/routes/subjects/subject.js')(app);
+require('./app/routes/topics/topic.js')(app);
 app.listen(port);
 console.log('The magic happens on port ' + port);
