@@ -7,8 +7,9 @@ dt.format('Y-m-d H:M:S');
 const express = require('express');
 const router = express.Router();
 connection.query('USE ' + dbconfig.database);
+var CommonComponent = require("../../../config/CommonComponent");
 router.get('/UserClass', function(req,res){
-    verifyToken(req,res)
+    CommonComponent.verifyToken(req,res)
 
         connection.query("select * from classes", function(error,rows, fields){
             if(error)
@@ -19,7 +20,7 @@ router.get('/UserClass', function(req,res){
     });
 
     router.post('/UserClass', function(req,res){
-        verifyToken(req,res)
+        CommonComponent.verifyToken(req,res)
 
         let addclass = {
             class_name,
@@ -54,7 +55,7 @@ router.get('/UserClass', function(req,res){
     })
 
     router.put('/UserClass',function(req,res){
-        verifyToken(req,res)
+        CommonComponent.verifyToken(req,res)
 
         let editclass = {
             class_name:req.body.class_name,
@@ -73,7 +74,7 @@ router.get('/UserClass', function(req,res){
     })
 
     router.delete('/UserClass',function(req,res){
-        verifyToken(req,res)
+        CommonComponent.verifyToken(req,res)
 
         connection.query('DELETE FROM classes WHERE id=?',[req.body.id],function(err,rows,fields){
             if(!!err){
@@ -84,23 +85,6 @@ router.get('/UserClass', function(req,res){
 
         });
     })
-    function verifyToken(req, res, next){
-    
-        //Request header with authorization key
-        const bearerHeader = req.headers['authorization'];
-        
-        //Check if there is  a header
-        if(typeof bearerHeader !== 'undefined'){
-            const bearer = bearerHeader.split(' ');
-            
-            //Get Token arrray by spliting
-            const bearerToken = bearer[1];
-            req.token = bearerToken;
-            //call next middleware
-            //next();
-        }else{
-            res.json({"status":false,"Message":"User Unauthorized"});
-        }
-    }
+   
 
     module.exports = router;

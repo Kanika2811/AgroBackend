@@ -7,10 +7,11 @@ var dbconfig = require('./database');
 var connection = mysql.createConnection(dbconfig.connection);
 connection.query('USE ' + dbconfig.database);
 const SendOtp = require('sendotp');
-const sendOtp = new SendOtp('298598ATzi2zRy0HB5da29b3a');
+var Constants = require('../config/ConstantKeys')
+const sendOtp = new SendOtp(Constants.MSG_KEY);
 const jwt = require('jsonwebtoken');
 module.exports = function(passport) {
-
+    console.log("message_key"+Constants.MSG_KEY);
     // passport set up; required for persistent login sessions
     // passport needs ability to serialize and unserialize users out of session
 
