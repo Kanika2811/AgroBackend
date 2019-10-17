@@ -8,6 +8,8 @@ const express = require('express');
 const router = express.Router();
 connection.query('USE ' + dbconfig.database);
 router.get('/UserClass', function(req,res){
+    verifyToken(req,res)
+
         connection.query("select * from classes", function(error,rows, fields){
             if(error)
                  return res.json({"status":false,"message":"Error getting classes"});
@@ -52,6 +54,8 @@ router.get('/UserClass', function(req,res){
     })
 
     router.put('/UserClass',function(req,res){
+        verifyToken(req,res)
+
         let editclass = {
             class_name:req.body.class_name,
             board:req.body.board,
@@ -69,6 +73,8 @@ router.get('/UserClass', function(req,res){
     })
 
     router.delete('/UserClass',function(req,res){
+        verifyToken(req,res)
+
         connection.query('DELETE FROM classes WHERE id=?',[req.body.id],function(err,rows,fields){
             if(!!err){
                  console.log('error in this query'+err)}
