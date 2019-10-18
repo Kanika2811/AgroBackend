@@ -1,3 +1,3 @@
 module.exports = {
-    MSG_KEY : "298598ATzi2zRy0HB5da29b3a"
+    MSG_KEY : "299428AhClMkoUH5da860b0"
 }

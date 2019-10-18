@@ -11,7 +11,7 @@ var Constants = require('../config/ConstantKeys')
 const sendOtp = new SendOtp(Constants.MSG_KEY);
 const jwt = require('jsonwebtoken');
 module.exports = function(passport) {
-    console.log("message_key"+Constants.MSG_KEY);
+   // console.log("message_key"+Constants.MSG_KEY);
     // passport set up; required for persistent login sessions
     // passport needs ability to serialize and unserialize users out of session
 
@@ -52,17 +52,16 @@ module.exports = function(passport) {
                         email_id: req.body.email_id
                     }
 
-                    sendOtp.send(username, "MRB",otp, function (error, data) {
-                        console.log("1")
+                    sendOtp.send("919001055339", "SMSIND",otp, function (error, data) {
+                        console.log(data);
                         jwt.sign({user},'SuperSecRetKey', { expiresIn: 60 }, (err, token) => {
                           if(!err){
-                            console.log(req.body.dob)
-                            var insertQuery = "INSERT INTO users (name,user_class,dob, password, email_id, contact_no,otp,token,user_city,user_state) values (?,?,?,?,?,?,?,?,?,?)";
-                            connection.query(insertQuery,[req.body.name,req.body.user_class,req.body.dob,newUserMysql.password, req.body.email_id,req.body.contact_no,otp,token,req.body.user_city,req.body.user_state],function(err, rows) {
-                                console.log(err)
+                            var insertQuery = "INSERT INTO users (name,dob, password, email_id, contact_no,otp,token,city,state) values (?,?,?,?,?,?,?,?,?)";
+                            connection.query(insertQuery,[req.body.name,req.body.dob,newUserMysql.password, req.body.email_id,req.body.contact_no,otp,token,req.body.user_city,req.body.user_state],function(err, rows) {
                                 newUserMysql.id = rows.insertId;
                                 newUserMysql.email_id=req.body.email_id;
-                                return done(null, rows[0]);
+                                
+                                return done(null, newUserMysql);
     
                             });
                           }
