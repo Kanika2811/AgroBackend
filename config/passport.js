@@ -81,7 +81,8 @@ module.exports = function(passport) {
             passReqToCallback : true,failureFlash : true
         },
         function(req, username, password, done) {
-            connection.query("SELECT * FROM users WHERE contact_no = ?",[req.body.contact_no], function(err, rows){
+            username="91"+username;
+            connection.query("SELECT * FROM users WHERE contact_no = ? and is_verified=1",[username], function(err, rows){
                 if (err)
                     return done(err);
                 if (!rows.length) {
