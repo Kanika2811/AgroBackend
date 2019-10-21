@@ -36,6 +36,21 @@ module.exports = function(passport) {
             passReqToCallback : true
         },
         function(req,username, password, done) {
+
+            let usersignup = {
+                name,
+                dob,
+                password,
+                email_id,
+                contact_no,
+                user_class,
+                user_city,
+                user_state
+            } = req.body;
+            if(name == '' || name === undefined){
+                return done(null, false, {message: 'Invalid Credential, please check carefully...!'})
+            }
+
             connection.query("SELECT * FROM users WHERE contact_no = ?",[username], function(err, rows) {
                 if (err)
                     return done(err);
@@ -51,18 +66,14 @@ module.exports = function(passport) {
                         contact_no: username,
                         email_id: req.body.email_id
                     }
-
-                    sendOtp.send("919001055339", "SMSIND",otp, function (error, data) {
-                        console.log(data);
+                    sendOtp.send(username, Constants.OTP_SENDER_ID,otp, function (error, data) {
                         jwt.sign({user},'SuperSecRetKey', { expiresIn: 60 }, (err, token) => {
                           if(!err){
-                            var insertQuery = "INSERT INTO users (name,dob, password, email_id, contact_no,otp,token,city,state) values (?,?,?,?,?,?,?,?,?)";
+                            var insertQuery = "INSERT INTO users (name,dob, password, email_id, contact_no,otp,token,user_city,user_state) values (?,?,?,?,?,?,?,?,?)";
                             connection.query(insertQuery,[req.body.name,req.body.dob,newUserMysql.password, req.body.email_id,req.body.contact_no,otp,token,req.body.user_city,req.body.user_state],function(err, rows) {
                                 newUserMysql.id = rows.insertId;
                                 newUserMysql.email_id=req.body.email_id;
-                                
                                 return done(null, newUserMysql);
-    
                             });
                           }
                         });

@@ -68,7 +68,7 @@ module.exports = function(app, passport) {
 	  });
 
 	  app.get('/signup/failurejson', function(req, res) {
-		res.json({ message: 'This user already exists',"data":[] });
+		return res;
 	  });
 	// =====================================
 	// PROFILE SECTION =========================

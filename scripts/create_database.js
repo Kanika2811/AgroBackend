@@ -24,7 +24,7 @@ CREATE TABLE `' + dbconfig.database + '`.`' + dbconfig.users_table + '` ( \
     `email_id` varchar(50) NOT NULL, \
     `contact_no` BIGINT(20) NOT NULL, \
     `dob` date NOT NULL, \
-    `user_class` varchar(7) NOT NULL, \
+    `user_class` int(2) NOT NULL, \
     `user_city` varchar(20) NOT NULL, \
     `user_state` varchar(20) NOT NULL, \
     `is_verified` tinyint(1) DEFAULT 0 , \

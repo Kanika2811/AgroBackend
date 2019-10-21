@@ -4,25 +4,34 @@ var connection = mysql.createConnection(dbconfig.connection);
 var dateTime = require('node-datetime');
 var dt = dateTime.create();
 dt.format('Y-m-d H:M:S');
-
+const express = require('express');
+const router = express.Router();
 connection.query('USE ' + dbconfig.database);
-module.exports = function(app) {
-    app.get('/allsubjects', function(req,res){
-        connection.query("select * from classes", function(error,rows, fields){
+var CommonComponent = require("../../../config/CommonComponent");
+
+    router.get('/subjects', function(req,res){
+        CommonComponent.verifyToken(req,res);
+        connection.query("select * from subject", function(error,rows, fields){
             if(!!error)
                 console.log("error in this query");
             else
-                return res.json({"message":"classes","data":rows});
+                return res.json({"message":"subject list","data":rows});
         });
     })
 
-    app.post('/insertsubject',function(req,res){
+    router.post('/subjects',function(req,res){
+        CommonComponent.verifyToken(req,res)
         let addclass = {
-            class_name:req.body.class_name,
-            board:req.body.board,
-            stream:req.body.stream
+            class_id,
+            subject_name,
+            medium
+        }=req.body;
+        if (!(typeof class_id === 'string' ||
+        typeof subject_name === 'string' ||
+        typeof medium === 'string')) {
+            return res.json({"status":false,"message":"Invalid data provided"});
         }
-        connection.query('insert into classes(class_name,board,stream) values(?,?,?)',[addclass.class_name,addclass.board,addclass.stream],function(error,rows,fields){
+        connection.query('insert into subject(class_id,subject_name,medium) values(?,?,?)',[addclass.class_name,addclass.board,addclass.stream],function(error,rows,fields){
             if(!!error)
                 console.log(error);
             else{
@@ -33,14 +42,15 @@ module.exports = function(app) {
         });
     })
 
-    app.put('/editsubject',function(req,res){
+    router.put('/subjects',function(req,res){
+        CommonComponent.verifyToken(req,res)
         let editclass = {
             class_name:req.body.class_name,
             board:req.body.board,
             stream:req.body.stream,
             id:req.body.id
         }
-        let sql ='UPDATE classes SET class_name = ?, board=?, stream=?, updated_timestamp=? WHERE id = ?';
+        let sql ='UPDATE subject SET class_id = ?, board=?, stream=?, updated_timestamp=? WHERE id = ?';
         connection.query(sql, [editclass.class_name,editclass.board, editclass.stream,new Date(dt.now()), editclass.id], function (err, rows, fields) {
             if(!!err) { console.log('error in this query'+err); }
             else{
@@ -49,8 +59,9 @@ module.exports = function(app) {
         });
     })
 
-    app.delete('/deletesubject',function(req,res){
-        connection.query('DELETE FROM classes WHERE id=?',[req.body.id],function(err,rows,fields){
+    router.delete('/subjects',function(req,res){
+        CommonComponent.verifyToken(req,res)
+        connection.query('DELETE FROM subject WHERE id=?',[req.body.id],function(err,rows,fields){
             if(!!err){ console.log('error in this query'+err)}
             else{
                 return res.json({"message":"Record deleted successfully!!"})
@@ -58,4 +69,4 @@ module.exports = function(app) {
 
         });
     })
-}
+module.exports = router;
