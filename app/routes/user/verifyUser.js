@@ -5,26 +5,39 @@ const router = express.Router();
 var mysql = require('mysql');
 var dbconfig = require('../../../config/database');
 var connection = mysql.createConnection(dbconfig.connection);
-
+var dateTime = require('node-datetime');
+var dt = dateTime.create();
+dt.format('Y-m-d H:M:S');
 connection.query('USE ' + dbconfig.database);
 
 router.post('/VerifyOTP', async (req, res) => {
 
     let addclass = {
         contact_no,
-        otp
+        is_otp_verified
         } = req.body;
     if (!(typeof contact_no === 'string' ||
-    typeof otp === 'string' )) {
+    typeof is_otp_verified === 'string' )) {
         return res.json({"status":false,"message":"Invalid data provided"});
     }
-    connection.query("SELECT otp FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
-       if(!err){
-            if(otp == rows[0].otp){
-                connection.query("UPDATE  my_schema.users SET is_verified = 1 WHERE contact_no = ?",[contact_no], function(err, rows) {
+    if(contact_no == '' || contact_no === undefined){
+        return res.json({status:false,Message:"Please Provide Contact Number"});
+    }
+    if(is_otp_verified == '' || is_otp_verified === undefined){
+        return res.json({status:false,Message:"Please Check OTP is verified or Not"});
+    }
+
+    connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
+       if(err){
+           return err;
+       }
+       if(rows.length){
+            if(is_otp_verified == "1"){
+                let sql ='UPDATE  users SET is_verified = ?,updated_timestamp=? WHERE contact_no = ?';
+                connection.query(sql,[is_otp_verified,new Date(dt.now()),contact_no], function(err, rows,fields) {
                     if(!err){
                         connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
-                        return res.json({"message":"User verified successfully","data":rows[0]});
+                        return res.json({status:true,Message:"User verified successfully!!!",data:rows[0]});
                         });
                     }
                     else{
@@ -36,6 +49,9 @@ router.post('/VerifyOTP', async (req, res) => {
             else{
                 return res.json({"status":false,"message":"Entered Incorrect OTP"});
             }
+        }
+        else{
+            return res.json({status:false,Message:"This user is not exist."});
        }
     });
 

@@ -34,7 +34,9 @@ router.put('/editContactNo', async (req, res) => {
                 if(!!err) {
                      console.log('error in this query'+err); }
                 else{
+                    connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[new_contactno], function(err, rows) {
                     return res.json({status:true,Message:"Updated Contact Number Successfully!!!",data:rows[0]});
+                    });
                 }
             });
         } else {
