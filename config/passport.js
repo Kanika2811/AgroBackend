@@ -6,6 +6,9 @@ var bcrypt = require('bcrypt');
 var dbconfig = require('./database');
 var connection = mysql.createConnection(dbconfig.connection);
 connection.query('USE ' + dbconfig.database);
+var dateTime = require('node-datetime');
+var dt = dateTime.create();
+dt.format('Y-m-d H:M:S');
 const SendOtp = require('sendotp');
 var Constants = require('../config/ConstantKeys')
 const sendOtp = new SendOtp(Constants.MSG_KEY);
@@ -37,20 +40,6 @@ module.exports = function(passport) {
         },
         function(req,username, password, done) {
 
-            let usersignup = {
-                name,
-                dob,
-                password,
-                email_id,
-                contact_no,
-                user_class,
-                user_city,
-                user_state
-            } = req.body;
-            if(name == '' || name === undefined){
-                return done(null, false, {message: 'Invalid Credential, please check carefully...!'})
-            }
-
             connection.query("SELECT * FROM users WHERE contact_no = ?",[username], function(err, rows) {
                 if (err)
                     return done(err);
@@ -69,8 +58,8 @@ module.exports = function(passport) {
                     sendOtp.send(username, Constants.OTP_SENDER_ID,otp, function (error, data) {
                         jwt.sign({user},'SuperSecRetKey', { expiresIn: 60 }, (err, token) => {
                           if(!err){
-                            var insertQuery = "INSERT INTO users (name,dob, password, email_id, contact_no,otp,token,user_city,user_state) values (?,?,?,?,?,?,?,?,?)";
-                            connection.query(insertQuery,[req.body.name,req.body.dob,newUserMysql.password, req.body.email_id,req.body.contact_no,otp,token,req.body.user_city,req.body.user_state],function(err, rows) {
+                            var insertQuery = "INSERT INTO users (name,dob, password, email_id, contact_no,token,user_city,user_state) values (?,?,?,?,?,?,?,?,?)";
+                            connection.query(insertQuery,[req.body.name,req.body.dob,newUserMysql.password, req.body.email_id,req.body.contact_no,token,req.body.user_city,req.body.user_state],function(err, rows) {
                                 newUserMysql.id = rows.insertId;
                                 newUserMysql.email_id=req.body.email_id;
                                 return done(null, newUserMysql);
@@ -107,6 +96,33 @@ module.exports = function(passport) {
             });
         })
     );
+
+    //Forgot password 
+    passport.use(
+        'local-forgot-password',
+        new LocalStrategy({
+            usernameField : 'contact_no',
+            passwordField : 'new_password',
+            passReqToCallback : true
+        },
+        function(req,username,password,done){
+            var newUserMysql = {
+                contact_no: username,
+                password: bcrypt.hashSync(req.body.new_password, bcrypt.genSaltSync(10))  // use the generateHash function in our user model
+            };
+            var insertQuery = 'UPDATE users SET password = ?, is_verified = ?, updated_timestamp = ? WHERE contact_no=?';
+            connection.query(insertQuery,[newUserMysql.password,req.body.is_otp_verified,new Date(dt.now()),newUserMysql.contact_no],function(err, rows) {
+                if(err) {
+                    return done(err); 
+                }
+                else{
+                    
+                    return done(null, newUserMysql);
+                }
+            });
+        })
+    );
+
 };
 
 function generate(n) {

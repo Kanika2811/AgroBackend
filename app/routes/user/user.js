@@ -5,6 +5,9 @@ var connection = mysql.createConnection(dbconfig.connection);
 var dateTime = require('node-datetime');
 var dt = dateTime.create();
 dt.format('Y-m-d H:M:S');
+const SendOtp = require('sendotp');
+var Constants = require('../../../config/ConstantKeys')
+const sendOtp = new SendOtp(Constants.MSG_KEY);
 
 const multer = require('multer');
 const path = require('path');
@@ -98,6 +101,83 @@ module.exports = function(app, passport) {
 		  }
 
 	});
+	app.get('/forgotPassword', async (req, res) => {
+		let forgotPassword = {
+			contact_no,
+			} = req.body;
+		if (!(typeof contact_no === 'string' )) {
+			return res.json({"status":false,"message":"Invalid data provided"});
+		}
+		if(contact_no == '' || contact_no === undefined){
+			return res.json({status:false,Message:"Please Provide Contact Number"});
+		}
+		contact_no = "91"+contact_no;
+		connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
+			if (err)
+				return done(err);
+			if (rows.length) {
+				var otp = generate(4);
+				sendOtp.send(contact_no, Constants.OTP_SENDER_ID,otp, function (error, data) {
+					if(!err){
+						rows[0].forgot_password_otp=otp;
+						return res.json({status:true,Message:"Forgot Password OTP Send SUCCESSFULLY!!!",data:rows[0]});
+					}
+					else{
+						return res.json({status:false,Message:"Please Check Contact Number."});
+					}
+				})
+			} else {
+				return res.json({status:false,Message:"This user is not exist."});
+			}
+		 });
+	
+	});
+
+
+	app.put('/forgotPassword',  function(req, res, next) {
+		let forgotPassword = {
+			contact_no,
+			is_otp_verified,
+			new_password
+			} = req.body;
+		if (!(typeof contact_no === 'string' ||
+		typeof is_otp_verified === 'string' ||
+		typeof new_password === 'string')) {
+			return res.json({"status":false,"message":"Invalid data provided"});
+		}
+		if(contact_no == '' || contact_no === undefined){
+			return res.json({status:false,Message:"Please Provide Contact Number"});
+		}
+		if(is_otp_verified == '' || is_otp_verified === undefined){
+			return res.json({status:false,Message:"Please Provide OTP is Verified on Not"});
+		}
+		if(new_password == '' || new_password === undefined){
+			return res.json({status:false,Message:"Please Provide New Password"});
+		}
+		connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
+			if (err)
+				return done(err);
+			if (rows.length) {
+				passport.authenticate('local-forgot-password', function(err, user, done) {
+					if (err) {
+					return next(err); 
+					}
+					if (!user) {
+						return res.json({status:false,Message:"Please provide correct information"});
+					}
+					else {
+					 	return res.json({status:true,message:"Password Updated Successfully",data:user});
+					}
+				})(req, res);
+
+
+			} else {
+				return res.json({status:false,Message:"This user is not exist."});
+			}
+		});
+	});
+
+
 };
 
 // route middleware to make sure
@@ -111,5 +191,17 @@ function isLoggedIn(req, res, next) {
 	res.redirect('/');
 }
 
+
+function generate(n) {
+    var add = 1, max = 12 - add;
+    if ( n > max ) {
+            return generate(max) + generate(n - max);
+    }
+    max        = Math.pow(10, n+add);
+    var min    = max/10;
+    var number = Math.floor( Math.random() * (max - min + 1) ) + min;
+
+    return ("" + number).substring(add);
+}
 
 

@@ -15,7 +15,9 @@ router.post('/resendOTP', async (req, res) => {
     if (!(typeof contact_no === 'string' )) {
         return res.json({"status":false,"message":"Invalid data provided"});
     }
-
+    if(contact_no == '' || contact_no === undefined){
+        return res.json({status:false,Message:"Please Provide Contact Number"});
+    }
     connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
         if (err)
             return done(err);
@@ -27,7 +29,7 @@ router.post('/resendOTP', async (req, res) => {
                     return res.json({status:true,Message:"OTP RESEND SUCCESSFULLY!!!",data:rows[0]});
                 }
                 else{
-                    
+                    return res.json({status:false,Message:"Please Check Contact Number."});
                 }
             })
         } else {

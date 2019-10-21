@@ -30,7 +30,6 @@ CREATE TABLE `' + dbconfig.database + '`.`' + dbconfig.users_table + '` ( \
     `is_verified` tinyint(1) DEFAULT 0 , \
     `is_video_purchased` VARCHAR(7) DEFAULT 0, \
     `token` varchar(255) NOT NULL, \
-    `otp` int(4), \
     `delete_flag` tinyint(1) DEFAULT 0, \
     `created_timestamp` timestamp NOT NULL DEFAULT current_timestamp(), \
     `updated_timestamp` timestamp NOT NULL DEFAULT current_timestamp() , \

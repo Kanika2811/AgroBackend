@@ -13,6 +13,8 @@ const verifyUser = require('./app/routes/user/verifyUser.js');
 const userClass = require('./app/routes/UserClass/UserClass.js');
 const allCityState = require('./app/routes/user/allcitystate.js');
 const resendOTP = require('./app/routes/user/resendotp.js');
+const editContactNo = require('./app/routes/user/editcontactno.js');
+
 
 var passport = require('passport');
 var flash    = require('connect-flash');
@@ -44,6 +46,7 @@ app.use(apiVersion,verifyUser);
 app.use(apiVersion,userClass);
 app.use(apiVersion,allCityState);
 app.use(apiVersion,resendOTP);
+app.use(apiVersion,editContactNo);
 
 
 
