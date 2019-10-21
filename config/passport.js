@@ -39,12 +39,13 @@ module.exports = function(passport) {
             passReqToCallback : true
         },
         function(req,username, password, done) {
-
+            username="91"+username;
             connection.query("SELECT * FROM users WHERE contact_no = ?",[username], function(err, rows) {
                 if (err)
                     return done(err);
                 if (rows.length) {
-                    return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
+                    
+                    return done(null,false);
                 } else {
                      var newUserMysql = {
                         contact_no: username,
@@ -58,11 +59,12 @@ module.exports = function(passport) {
                     sendOtp.send(username, Constants.OTP_SENDER_ID,otp, function (error, data) {
                         jwt.sign({user},'SuperSecRetKey', { expiresIn: 60 }, (err, token) => {
                           if(!err){
-                            var insertQuery = "INSERT INTO users (name,dob, password, email_id, contact_no,token,user_city,user_state) values (?,?,?,?,?,?,?,?,?)";
-                            connection.query(insertQuery,[req.body.name,req.body.dob,newUserMysql.password, req.body.email_id,req.body.contact_no,token,req.body.user_city,req.body.user_state],function(err, rows) {
-                                newUserMysql.id = rows.insertId;
-                                newUserMysql.email_id=req.body.email_id;
-                                return done(null, newUserMysql);
+                            var insertQuery = "INSERT INTO users (name,dob, password, email_id, contact_no,token,user_class,user_city,user_state) values (?,?,?,?,?,?,?,?,?)";
+                            connection.query(insertQuery,[req.body.name,req.body.dob,newUserMysql.password, req.body.email_id,username,token,req.body.user_class,req.body.user_city,req.body.user_state],function(err, rows) {
+                                connection.query("SELECT * FROM users WHERE contact_no = ?",[username], function(err, rows) {
+                                    rows[0].is_otp =otp;
+                                    return done(null, rows[0]);
+                                });
                             });
                           }
                         });

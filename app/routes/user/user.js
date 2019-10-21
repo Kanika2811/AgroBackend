@@ -57,12 +57,68 @@ module.exports = function(app, passport) {
 	  })(req,res,next)
 	});
 
-	app.post('/signup', passport.authenticate('local-signup', {
-		successRedirect : '/signup/successjson',
-		failureRedirect : '/signup/failurejson',
-		failureFlash : true
-		}));
+	app.post('/signup',function(req,res,next){
+		let signup = {
+			name,
+			dob,
+			password,
+			email_id,
+			contact_no,
+			user_class,
+			user_city,
+			user_state
+			} = req.body;
+		if (!(typeof name === 'string' ||
+		typeof dob === 'string' ||
+		typeof password === 'string' ||
+		typeof email_id === 'string' ||
+		typeof contact_no === 'string' ||
+		typeof user_class === 'string' ||
+		typeof user_city === 'string' ||
+		typeof user_state === 'string' )) {
+			return res.json({"status":false,"message":"Invalid data provided"});
+		}
+		if(name == '' || name === undefined){
+			return res.json({status:false,Message:"Please Enter Your Full Name"});
+		}
+		if(dob == '' || dob === undefined){
+			return res.json({status:false,Message:"Please Enter Your Date of Birth"});
+		}
+		if(password == '' || password === undefined){
+			return res.json({status:false,Message:"Please Enter Your Password"});
+		}
+		if(email_id == '' || email_id === undefined){
+			return res.json({status:false,Message:"Please Enter Your Email Address"});
+		}
+		if (!validateEmail(email_id)) {
+			return res.json({status:false,Message:"Please Enter Valid Email Address"});
+		}
+		if(contact_no == '' || contact_no === undefined){
+			return res.json({status:false,Message:"Please Enter Contact Number"});
+		}
+		if(user_class == '' || user_class === undefined){
+			return res.json({status:false,Message:"Please Select Your Class"});
+		}
+		if(user_state == '' || user_state === undefined){
+			return res.json({status:false,Message:"Please Select Your State"});
+		}
+		if(user_city == '' || user_city === undefined){
+			return res.json({status:false,Message:"Please Select Your State"});
+		}
 
+		passport.authenticate('local-signup', function(err,user,req) {
+			if (err) {
+				return res.json({"success":false,"Message":err});
+			}
+			if (!user) {
+				return res.json({"success":false,'signupMessage':'That username is already taken.'});
+			}
+			else {
+				 return res.json({"success":true,"message":"Please Verified Your OTP","data":user});}
+		  })(req,res,next)
+
+
+	});
 
 	  // return messages for signup users
 	  app.get('/signup/successjson', function(req, res) {
@@ -205,3 +261,7 @@ function generate(n) {
 }
 
 
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
