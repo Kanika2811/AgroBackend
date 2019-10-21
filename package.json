@@ -23,6 +23,7 @@
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "sendotp": "^1.2.9"
+        "api": "git@github.com:GauravRohit/ApiModule.git"
   },
   "devDependencies": {
     "nodemon": "^1.19.3"
