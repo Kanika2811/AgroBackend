@@ -167,7 +167,6 @@ module.exports = function(app, passport) {
 		if(contact_no == '' || contact_no === undefined){
 			return res.json({status:false,Message:"Please Provide Contact Number"});
 		}
-		contact_no = "91"+contact_no;
 		connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
 			if (err)
 				return done(err);
