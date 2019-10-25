@@ -21,7 +21,7 @@ router.get('/UserClass', function(req,res){
 
     router.post('/UserClass', function(req,res){
         CommonComponent.verifyToken(req,res)
-
+        
         let addclass = {
             class_name,
             board,
@@ -32,45 +32,91 @@ router.get('/UserClass', function(req,res){
         typeof stream === 'string')) {
             return res.json({"status":false,"message":"Invalid data provided"});
         }
-        connection.query("select * from classes WHERE class_name = ?" [class_name],function(error,rows,fields){
-            if(error.message == 'Query was empty'){
-                console.log('There is no changes in the update, lets continue the progress...');
+
+        if(class_name == '' || class_name === undefined){
+            return res.json({status:false,Message:"Please Enter Class Name."});
+        }
+        if(board == '' || board === undefined){
+            return res.json({status:false,Message:"Please Enter Class Board."});
+        }
+        if(stream == '' || stream === undefined){
+            return res.json({status:false,Message:"Please Enter Class Stream"});
+        }
+        
+        connection.query('select * from classes WHERE class_name = ? and stream=?', [class_name,stream],function(error,rows,fields){
+            if(error){
+                console.log(error);
             }
-            if(class_name === rows){
+            if(rows.length >= 1&&class_name === rows[0].class_name){
                     return res.json({"status":false,"message":"Class already exist"});
             }
             else {
                 connection.query('insert into classes(class_name,board,stream) values(?,?,?)',[class_name,board,stream],function(error,rows,fields){
-                   console.log(error)
                     if(error)
                         return res.json({"status":false,"message":"Error Adding new class class"});
                     else{
-                     return res.json({"status":true,"message":"Add class successfully!!!","data":addclass});
-        
+                        connection.query("SELECT * FROM classes WHERE class_name = ? and stream=?",[class_name,stream], function(err, rows) {
+                     return res.json({"status":true,"message":"Add class successfully!!!","data":rows[0]});
+                        });
                     }
                 });
             }
         });
-       
     })
 
     router.put('/UserClass',function(req,res){
         CommonComponent.verifyToken(req,res)
 
         let editclass = {
-            class_name:req.body.class_name,
-            board:req.body.board,
-            stream:req.body.stream,
-            id:req.body.id
+            class_name:class_name,
+            board:board,
+            stream:stream,
+            class_id:class_id
+        } = req.body;
+        if (!(typeof class_name === 'string' ||
+        typeof board === 'string' ||
+        typeof stream === 'string'||
+        typeof class_id === 'string')) {
+            return res.json({"status":false,"message":"Invalid data provided"});
         }
-        let sql ='UPDATE classes SET class_name = ?, board=?, stream=?, updated_timestamp=? WHERE id = ?';
-        connection.query(sql, [editclass.class_name,editclass.board, editclass.stream,new Date(dt.now()), editclass.id], function (err, rows, fields) {
-            if(!!err) {
-                 console.log('error in this query'+err); }
-            else{
-                 return res.json({"message":"Edit class successfully!!!","data":editclass});
+
+        if(class_name == '' || class_name === undefined){
+            return res.json({status:false,Message:"Please Provide Class Name."});
+        }
+        if(board == '' || board === undefined){
+            return res.json({status:false,Message:"Please Provide Class Board."});
+        }
+        if(stream == '' || stream === undefined){
+            return res.json({status:false,Message:"Please Provide Class Stream"});
+        }
+        if(class_id == '' || class_id === undefined){
+            return res.json({status:false,Message:"Please Provide Class Id"});
+        }
+
+
+        connection.query('select * from classes WHERE class_name = ? and stream=?', [class_name,stream],function(error,rows,fields){
+            if(error){
+                console.log(error);
             }
-        });
+            if(rows.length >= 1&&class_name === rows[0].class_name){
+                    return res.json({"status":false,"message":"Class already exist"});
+            }
+            else {
+
+                let sql ='UPDATE classes SET class_name = ?, board=?, stream=?, updated_timestamp=? WHERE id = ?';
+                connection.query(sql, [class_name,board, stream,new Date(dt.now()), class_id], function (err, rows, fields) {
+                    if(!!err) {
+                        console.log('error in this query'+err); }
+                    else{
+                        connection.query("SELECT * FROM classes WHERE id=?",[class_id], function(err, rows) {
+                        return res.json({"message":"Edit class successfully!!!","data":rows[0]});
+                        });
+                    }
+                });
+            }
+    });
+
+
     })
 
     router.delete('/UserClass',function(req,res){
@@ -80,7 +126,7 @@ router.get('/UserClass', function(req,res){
             if(!!err){
                  console.log('error in this query'+err)}
             else{
-                return res.json({"message":"Record deleted successfully!!"})
+                return res.json({"message":"class deleted successfully!!"})
             }
 
         });

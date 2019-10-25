@@ -11,11 +11,28 @@ var CommonComponent = require("../../../config/CommonComponent");
 
     router.get('/subjects', function(req,res){
         CommonComponent.verifyToken(req,res);
-        connection.query("select * from subject", function(error,rows, fields){
+        let getsubject = {
+            class_id
+        } = req.body;
+        if (!(typeof class_id === 'string' )) {
+            return res.json({"status":false,"message":"Invalid data provided"});
+        }
+
+        if(class_id == '' || class_id === undefined){
+            return res.json({status:false,Message:"Please Select Class first"});
+        }
+        connection.query('select * from subject where class_id=?',[class_id],function(error,rows, fields){
             if(!!error)
                 console.log("error in this query");
+            if(rows.length==0)
+            {
+                return res.json({"message":"There is no subject in this Class"});
+            }
             else
+            {
                 return res.json({"message":"subject list","data":rows});
+            }
+               
         });
     })
 
@@ -31,32 +48,89 @@ var CommonComponent = require("../../../config/CommonComponent");
         typeof medium === 'string')) {
             return res.json({"status":false,"message":"Invalid data provided"});
         }
-        connection.query('insert into subject(class_id,subject_name,medium) values(?,?,?)',[addclass.class_name,addclass.board,addclass.stream],function(error,rows,fields){
-            if(!!error)
-                console.log(error);
-            else{
-                addclass.id = rows.insertId;
-                return res.json({"message":"Add class successfully!!!","data":addclass});
 
+        if(class_id == '' || class_id === undefined){
+            return res.json({status:false,Message:"Please Select Class First."});
+        }
+        if(subject_name == '' || subject_name === undefined){
+            return res.json({status:false,Message:"Please Enter Subject Name."});
+        }
+        if(medium == '' || medium === undefined){
+            return res.json({status:false,Message:"Please Enter Subject Medium Name."});
+        }
+
+        connection.query('select * from subject WHERE subject_name = ? and medium=? and class_id=?', [subject_name,medium,class_id],function(error,rows,fields){
+            if(error){
+                console.log(error);
             }
-        });
+            if(rows.length >= 1&&subject_name === rows[0].subject_name){
+                    return res.json({"status":false,"message":"Subject already exist"});
+            }
+            else {
+                connection.query('insert into subject(class_id,subject_name,medium) values(?,?,?)',[class_id,subject_name,medium],function(error,rows,fields){
+                    if(!!error)
+                        console.log(error);
+                    else{
+                        connection.query("select * from subject WHERE subject_name = ? and medium=? and class_id=?",[subject_name,medium,class_id], function(err, rows) {
+                        return res.json({"message":"Add Subject successfully!!!","data":rows[0]});
+                        });
+
+                    }
+                });
+
+        }
+    });
+
     })
 
     router.put('/subjects',function(req,res){
         CommonComponent.verifyToken(req,res)
-        let editclass = {
-            class_name:req.body.class_name,
-            board:req.body.board,
-            stream:req.body.stream,
-            id:req.body.id
+       
+        let addclass = {
+            class_id,
+            subject_id,
+            subject_name,
+            medium
+        }=req.body;
+        if (!(typeof class_id === 'string' ||
+        typeof subject_id === 'string' ||
+        typeof subject_name === 'string' ||
+        typeof medium === 'string')) {
+            return res.json({"status":false,"message":"Invalid data provided"});
         }
-        let sql ='UPDATE subject SET class_id = ?, board=?, stream=?, updated_timestamp=? WHERE id = ?';
-        connection.query(sql, [editclass.class_name,editclass.board, editclass.stream,new Date(dt.now()), editclass.id], function (err, rows, fields) {
-            if(!!err) { console.log('error in this query'+err); }
-            else{
-            return res.json({"message":"Edit class successfully!!!","data":editclass});
+
+        if(class_id == '' || class_id === undefined){
+            return res.json({status:false,Message:"Please Provide Class Id."});
+        }
+        if(subject_id == '' || subject_id === undefined){
+            return res.json({status:false,Message:"Please Provide Subject Id."});
+        }
+        if(subject_name == '' || subject_name === undefined){
+            return res.json({status:false,Message:"Please Provide Subject Name."});
+        }
+        if(medium == '' || medium === undefined){
+            return res.json({status:false,Message:"Please Provide Subject Medium Name."});
+        }
+        connection.query('select * from subject WHERE subject_name = ? and medium=? and class_id=?', [subject_name,medium,class_id],function(error,rows,fields){
+            if(error){
+                console.log(error);
             }
-        });
+            if(rows.length >= 1&&subject_name === rows[0].subject_name){
+                    return res.json({"status":false,"message":"Subject already exist"});
+            }
+            else {
+
+                    let sql ='UPDATE subject SET subject_name = ? , medium=?, updated_timestamp=? WHERE id = ? and class_id=?';
+                    connection.query(sql, [subject_name,medium,new Date(dt.now()),subject_id,class_id], function (err, rows, fields) {
+                        if(!!err) { console.log('error in this query'+err); }
+                        else{
+                            connection.query('select * from subject WHERE subject_name = ? and medium=? and class_id=?', [subject_name,medium,class_id],function(error,rows,fields){
+                         return res.json({"message":"Edit Subject successfully!!!","data":rows[0]});
+                            });
+                        }
+                    });
+             }
+         });
     })
 
     router.delete('/subjects',function(req,res){
@@ -64,7 +138,7 @@ var CommonComponent = require("../../../config/CommonComponent");
         connection.query('DELETE FROM subject WHERE id=?',[req.body.id],function(err,rows,fields){
             if(!!err){ console.log('error in this query'+err)}
             else{
-                return res.json({"message":"Record deleted successfully!!"})
+                return res.json({"message":"Subject deleted successfully!!"})
             }
 
         });

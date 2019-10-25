@@ -14,6 +14,7 @@ const userClass = require('./app/routes/UserClass/UserClass.js');
 const allCityState = require('./app/routes/user/allcitystate.js');
 const resendOTP = require('./app/routes/user/resendotp.js');
 const editContactNo = require('./app/routes/user/editcontactno.js');
+const subjects = require('./app/routes/subjects/subject.js');
 
 
 var passport = require('passport');
@@ -47,6 +48,7 @@ app.use(apiVersion,userClass);
 app.use(apiVersion,allCityState);
 app.use(apiVersion,resendOTP);
 app.use(apiVersion,editContactNo);
+app.use(apiVersion,subjects);
 
 
 
