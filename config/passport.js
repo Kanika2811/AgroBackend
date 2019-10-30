@@ -61,13 +61,13 @@ module.exports = function(passport) {
                             var insertQuery = "INSERT INTO users (name,gender,dob, password, email_id, contact_no,token,otp,user_class,user_city,user_state) values (?,?,?,?,?,?,?,?,?,?,?)";
                             connection.query(insertQuery,[req.body.name,req.body.gender,req.body.dob,newUserMysql.password, req.body.email_id,username,token,otp,req.body.user_class,req.body.user_city,req.body.user_state],function(err, rows) {
                                 connection.query("SELECT * FROM users WHERE contact_no = ?",[username], function(err, rows) {
-                                    let user_data =[];
+                                    
                                     let obj ={};
                                     
                                     obj["contact_no"] =  rows[0].contact_no;
                                     obj["otp"] = rows[0].otp;
-                                    user_data.push(obj)
-                                    return done(null, user_data);
+                                    
+                                    return done(null, obj);
                                 });
                             });
                           }

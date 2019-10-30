@@ -32,14 +32,14 @@ router.post('/resendOTP', async (req, res) => {
                     let sql ='UPDATE  users SET otp = ?,is_verified =0, updated_timestamp=? WHERE contact_no = ?';
                     connection.query(sql,[otp,new Date(dt.now()),contact_no], function(err, rows,fields) {
                         if(!err){
-                            let user_data =[];
+                           
                             let obj ={};
                             
                             obj["contact_no"] =  contact_no;
                             obj["otp"] = otp;
-                            user_data.push(obj)
+                           
                             
-                            return res.json({status:true,message:"OTP RESEND SUCCESSFULLY!!!",data:user_data});
+                            return res.json({status:true,message:"OTP RESEND SUCCESSFULLY!!!",data:obj});
                         }
                         else{
                             return res.json({"error":err});
