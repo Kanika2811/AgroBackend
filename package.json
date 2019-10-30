@@ -5,7 +5,7 @@
     "start": "node ./server"
   },
   "dependencies": {
-      "api": "git@github.com:GauravRohit/ApiModule.git"
+    "api": "git@github.com:GauravRohit/ApiModule.git"
   },
   "devDependencies": {
     "nodemon": "^1.19.3"

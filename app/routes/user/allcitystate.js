@@ -28,19 +28,22 @@ router.get('/allClassState', function(req,res){
         });
     });
 
-    router.get('/cities',function(req,res){
+    router.get('/city',function(req,res){
         let user_state_data = {
             user_state,
-            } = req.body;
+            } = req.query;
         if (!(typeof user_state === 'string' )) {
             return res.json({"status":false,"message":"Invalid data provided"});
         }
         if(user_state == '' || user_state === undefined){
             return res.json({status:false,Message:"Please Select Your State"});
         }
-        console.log(user_state);
+        let cities_data =[];
+        let obj ={};
         let cities = yourhandle.getCities('IN',user_state);
-        return res.json({"status":true,"message":"Success","data":cities});
+        obj["cities"] = cities;
+        cities_data.push(obj)
+        return res.json({"status":true,"message":"Success","data":cities_data});
     });
 
     module.exports = router;
