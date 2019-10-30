@@ -33,6 +33,7 @@ router.put('/editContactNo', async (req, res) => {
                      console.log('error in this query'+err); }
                 else{
                     connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[new_contact_no], function(err, rows) {
+                        rows[0].dob=rows[0].dob.toLocaleString().slice(0,10).replace('/','-').replace('/','-');
                     return res.json({status:true,message:"Updated Contact Number Successfully!!!",data:rows[0]});
                     });
                 }
