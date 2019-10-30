@@ -116,7 +116,7 @@ module.exports = function(app, passport) {
 				return res.json({"status":false,"message":err});
 			}
 			if (!user) {
-				return res.json({"status":false,'message':'That username is already taken.'});
+				return res.json({"status":false,'message':'This username is already taken.'});
 			}
 			else {
 				 return res.json({"status":true,"message":"Please Verified Your OTP","data":user});}
