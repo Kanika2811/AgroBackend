@@ -22,13 +22,15 @@ CREATE TABLE `' + dbconfig.database + '`.`' + dbconfig.users_table + '` ( \
     `name` varchar(30) NOT NULL, \
     `password` CHAR(60) NOT NULL, \
     `email_id` varchar(50) NOT NULL, \
-    `contact_no` BIGINT(20) NOT NULL, \
+    `contact_no` VARCHAR(10) NOT NULL, \
     `dob` date NOT NULL, \
     `user_class` int(2) NOT NULL, \
     `user_city` varchar(20) NOT NULL, \
     `user_state` varchar(20) NOT NULL, \
     `is_verified` tinyint(1) DEFAULT 0 , \
     `is_video_purchased` VARCHAR(7) DEFAULT 0, \
+    `otp` int(4), \
+    `gender` VARCHAR(6) NOT NULL, \
     `token` varchar(255) NOT NULL, \
     `delete_flag` tinyint(1) DEFAULT 0, \
     `created_timestamp` timestamp NOT NULL DEFAULT current_timestamp(), \
