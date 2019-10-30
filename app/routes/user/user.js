@@ -78,7 +78,7 @@ module.exports = function(app, passport) {
 		typeof user_class === 'string' ||
 		typeof user_city === 'string' ||
 		typeof user_state === 'string' )) {
-			return res.json({"status":false,"message":"Invalid data provided"});
+			return res.json({"status":false,"Message":"Invalid data provided"});
 		}
 		if(name == '' || name === undefined){
 			return res.json({status:false,Message:"Please Enter Your Full Name"});
@@ -116,10 +116,10 @@ module.exports = function(app, passport) {
 				return res.json({"success":false,"Message":err});
 			}
 			if (!user) {
-				return res.json({"success":false,'signupMessage':'That username is already taken.'});
+				return res.json({"success":false,'Message':'That username is already taken.'});
 			}
 			else {
-				 return res.json({"success":true,"message":"Please Verified Your OTP","data":user});}
+				 return res.json({"success":true,"Message":"Please Verified Your OTP","data":user});}
 		  })(req,res,next)
 
 
@@ -167,7 +167,7 @@ module.exports = function(app, passport) {
 			contact_no,
 			} = req.body;
 		if (!(typeof contact_no === 'string' )) {
-			return res.json({"status":false,"message":"Invalid data provided"});
+			return res.json({"status":false,"Message":"Invalid data provided"});
 		}
 		if(contact_no == '' || contact_no === undefined){
 			return res.json({status:false,Message:"Please Provide Contact Number"});
@@ -219,7 +219,7 @@ module.exports = function(app, passport) {
 		if (!(typeof contact_no === 'string' ||
 		typeof otp === 'string' ||
 		typeof new_password === 'string')) {
-			return res.json({"status":false,"message":"Invalid data provided"});
+			return res.json({"status":false,"Message":"Invalid data provided"});
 		}
 		if(contact_no == '' || contact_no === undefined){
 			return res.json({status:false,Message:"Please Provide Contact Number"});
@@ -244,7 +244,7 @@ module.exports = function(app, passport) {
 							return res.json({status:false,Message:"Please provide correct information"});
 						}
 						else {
-							return res.json({status:true,message:"Password Updated Successfully",data:user});
+							return res.json({status:true,Message:"Password Updated Successfully",data:user});
 						}
 					})(req, res);
 				}

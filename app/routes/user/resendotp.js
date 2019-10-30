@@ -16,7 +16,7 @@ router.post('/resendOTP', async (req, res) => {
         contact_no,
         } = req.body;
     if (!(typeof contact_no === 'string' )) {
-        return res.json({"status":false,"message":"Invalid data provided"});
+        return res.json({"status":false,"Message":"Invalid data provided"});
     }
     if(contact_no == '' || contact_no === undefined){
         return res.json({status:false,Message:"Please Provide Contact Number"});

@@ -15,7 +15,7 @@ router.put('/editContactNo', async (req, res) => {
         } = req.body;
     if (!(typeof current_contact_no === 'string' ||
     typeof new_contact_no === 'string')) {
-        return res.json({"status":false,"message":"Invalid data provided"});
+        return res.json({"status":false,"Message":"Invalid data provided"});
     }
     if(current_contact_no == '' || current_contact_no === undefined){
         return res.json({status:false,Message:"Please Provide Current Contact Number"});

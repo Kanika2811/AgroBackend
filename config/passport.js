@@ -65,7 +65,7 @@ module.exports = function(passport) {
                                     let obj ={};
                                     
                                     obj["contact_no"] =  rows[0].contact_no;
-                                    obj["is_otp"] = rows[0].otp;
+                                    obj["otp"] = rows[0].otp;
                                     user_data.push(obj)
                                     return done(null, user_data);
                                 });
