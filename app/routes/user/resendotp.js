@@ -7,6 +7,9 @@ connection.query('USE ' + dbconfig.database);
 const SendOtp = require('sendotp');
 var Constants = require('../../../config/ConstantKeys')
 const sendOtp = new SendOtp(Constants.MSG_KEY);
+var dateTime = require('node-datetime');
+var dt = dateTime.create();
+dt.format('Y-m-d H:M:S');
 
 router.post('/resendOTP', async (req, res) => {
     let resendOTP = {
@@ -25,8 +28,24 @@ router.post('/resendOTP', async (req, res) => {
             var otp = generate(4);
             sendOtp.send(contact_no, Constants.OTP_SENDER_ID,otp, function (error, data) {
                 if(!err){
-                    rows[0].resend_otp=otp;
-                    return res.json({status:true,Message:"OTP RESEND SUCCESSFULLY!!!",data:rows[0]});
+
+                    let sql ='UPDATE  users SET otp = ?,is_verified =0, updated_timestamp=? WHERE contact_no = ?';
+                    connection.query(sql,[otp,new Date(dt.now()),contact_no], function(err, rows,fields) {
+                        if(!err){
+                            let user_data =[];
+                            let obj ={};
+                            
+                            obj["contact_no"] =  contact_no;
+                            obj["otp"] = otp;
+                            user_data.push(obj)
+                            
+                            return res.json({status:true,Message:"OTP RESEND SUCCESSFULLY!!!",data:user_data});
+                        }
+                        else{
+                            return res.json({"error":err});
+                        }
+                    });
+
                 }
                 else{
                     return res.json({status:false,Message:"Please Check Contact Number."});

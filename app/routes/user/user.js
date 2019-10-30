@@ -44,7 +44,7 @@ module.exports = function(app, passport) {
 	});*/
 
 	// process the login form
-	app.post('/login',function(req,res,next){
+	app.post('/api/v1/login',function(req,res,next){
 		passport.authenticate('local-login', function(err,user,req) {
 		if (err) {
 			return res.json({"success":false,"Message":err});
@@ -57,9 +57,10 @@ module.exports = function(app, passport) {
 	  })(req,res,next)
 	});
 
-	app.post('/signup',function(req,res,next){
+	app.post('/api/v1/signup',function(req,res,next){
 		let signup = {
 			name,
+			gender,
 			dob,
 			password,
 			email_id,
@@ -69,6 +70,7 @@ module.exports = function(app, passport) {
 			user_state
 			} = req.body;
 		if (!(typeof name === 'string' ||
+		typeof gender === 'string' ||
 		typeof dob === 'string' ||
 		typeof password === 'string' ||
 		typeof email_id === 'string' ||
@@ -80,6 +82,9 @@ module.exports = function(app, passport) {
 		}
 		if(name == '' || name === undefined){
 			return res.json({status:false,Message:"Please Enter Your Full Name"});
+		}
+		if(gender == '' || gender === undefined){
+			return res.json({status:false,Message:"Please Select Your Gender"});
 		}
 		if(dob == '' || dob === undefined){
 			return res.json({status:false,Message:"Please Enter Your Date of Birth"});
@@ -121,12 +126,12 @@ module.exports = function(app, passport) {
 	});
 
 	  // return messages for signup users
-	  app.get('/signup/successjson', function(req, res) {
+	  app.get('/api/v1/signup/successjson', function(req, res) {
           res.json({ message: 'Successfully created user'});
 
 	  });
 
-	  app.get('/signup/failurejson', function(req, res) {
+	  app.get('/api/v1/signup/failurejson', function(req, res) {
 		return res;
 	  });
 	// =====================================
@@ -134,7 +139,7 @@ module.exports = function(app, passport) {
 	// =====================================
 	// we will want this protected so you have to be logged in to visit
 	// we will use route middleware to verify this (the isLoggedIn function)
-	app.get('/profile', isLoggedIn, function(req, res) {
+	app.get('/api/v1/profile', isLoggedIn, function(req, res) {
 		res.render('profile.ejs', {
 			user : req.user // get the user out of session and pass to template
 		});
@@ -143,12 +148,12 @@ module.exports = function(app, passport) {
 	// =====================================
 	// LOGOUT ==============================
 	// =====================================
-	app.get('/logout', function(req, res) {
+	app.get('/api/v1/logout', function(req, res) {
 		req.logout();
 		res.redirect('/');
 	});
 
-	app.post('/upload',upload.single('file'),function(req,res,err) {
+	app.post('/api/v1/upload',upload.single('file'),function(req,res,err) {
 		if(!req.file) {
 			res.json({ message:err,"data":''});
 		  }
@@ -157,7 +162,7 @@ module.exports = function(app, passport) {
 		  }
 
 	});
-	app.get('/forgotPassword', async (req, res) => {
+	app.get('/api/v1/forgotPassword', async (req, res) => {
 		let forgotPassword = {
 			contact_no,
 			} = req.body;
@@ -174,8 +179,24 @@ module.exports = function(app, passport) {
 				var otp = generate(4);
 				sendOtp.send(contact_no, Constants.OTP_SENDER_ID,otp, function (error, data) {
 					if(!err){
-						rows[0].forgot_password_otp=otp;
-						return res.json({status:true,Message:"Forgot Password OTP Send SUCCESSFULLY!!!",data:rows[0]});
+	
+						let sql ='UPDATE  users SET otp = ?, updated_timestamp=? WHERE contact_no = ?';
+						connection.query(sql,[otp,new Date(dt.now()),contact_no], function(err, rows,fields) {
+							if(!err){
+								let user_data =[];
+								let obj ={};
+								
+								obj["contact_no"] =  contact_no;
+								obj["otp"] = otp;
+								user_data.push(obj)
+								
+								return res.json({status:true,Message:"Forgot Password OTP RESEND SUCCESSFULLY!!!",data:user_data});
+							}
+							else{
+								return res.json({"error":err});
+							}
+						});
+	
 					}
 					else{
 						return res.json({status:false,Message:"Please Check Contact Number."});
@@ -189,22 +210,22 @@ module.exports = function(app, passport) {
 	});
 
 
-	app.put('/forgotPassword',  function(req, res, next) {
+	app.put('/api/v1/forgotPassword',  function(req, res, next) {
 		let forgotPassword = {
 			contact_no,
-			is_otp_verified,
+			otp,
 			new_password
 			} = req.body;
 		if (!(typeof contact_no === 'string' ||
-		typeof is_otp_verified === 'string' ||
+		typeof otp === 'string' ||
 		typeof new_password === 'string')) {
 			return res.json({"status":false,"message":"Invalid data provided"});
 		}
 		if(contact_no == '' || contact_no === undefined){
 			return res.json({status:false,Message:"Please Provide Contact Number"});
 		}
-		if(is_otp_verified == '' || is_otp_verified === undefined){
-			return res.json({status:false,Message:"Please Provide OTP is Verified on Not"});
+		if(otp == '' || otp === undefined){
+			return res.json({status:false,Message:"Please Provide OTP "});
 		}
 		if(new_password == '' || new_password === undefined){
 			return res.json({status:false,Message:"Please Provide New Password"});
@@ -213,18 +234,23 @@ module.exports = function(app, passport) {
 			if (err)
 				return done(err);
 			if (rows.length) {
-				passport.authenticate('local-forgot-password', function(err, user, done) {
-					if (err) {
-					return next(err); 
-					}
-					if (!user) {
-						return res.json({status:false,Message:"Please provide correct information"});
-					}
-					else {
-					 	return res.json({status:true,message:"Password Updated Successfully",data:user});
-					}
-				})(req, res);
-
+				if(otp == rows[0].otp){
+					console.log("we are checking");
+					passport.authenticate('local-forgot-password', function(err, user, done) {
+						if (err) {
+						return next(err); 
+						}
+						if (!user) {
+							return res.json({status:false,Message:"Please provide correct information"});
+						}
+						else {
+							return res.json({status:true,message:"Password Updated Successfully",data:user});
+						}
+					})(req, res);
+				}
+				else{
+					return res.json({status:false,Message:"OTP is not Verified. Please Check Again"});
+				}
 
 			} else {
 				return res.json({status:false,Message:"This user is not exist."});
