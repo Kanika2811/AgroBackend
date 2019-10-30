@@ -18,13 +18,13 @@ router.post('/VerifyOTP', async (req, res) => {
         } = req.body;
     if (!(typeof contact_no === 'string' ||
     typeof otp === 'string' )) {
-        return res.json({"Status":false,"Message":"Invalid data provided"});
+        return res.json({"status":false,"message":"Invalid data provided"});
     }
     if(contact_no == '' || contact_no === undefined){
-        return res.json({Status:false,Message:"Please Provide Contact Number"});
+        return res.json({status:false,message:"Please Provide Contact Number"});
     }
     if(otp == '' || otp === undefined){
-        return res.json({Status:false,Message:"Please Provide otp"});
+        return res.json({status:false,message:"Please Provide otp"});
     }
 
     connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
@@ -37,7 +37,7 @@ router.post('/VerifyOTP', async (req, res) => {
                 connection.query(sql,["1",new Date(dt.now()),contact_no], function(err, rows,fields) {
                     if(!err){
                         connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
-                        return res.json({Status:true,Message:"User verified successfully!!!",data:rows[0]});
+                        return res.json({status:true,message:"User verified successfully!!!",data:rows[0]});
                         });
                     }
                     else{
@@ -47,11 +47,11 @@ router.post('/VerifyOTP', async (req, res) => {
 
             }
             else{
-                return res.json({"Status":false,"Message":"Entered Incorrect OTP"});
+                return res.json({"status":false,"message":"Entered Incorrect OTP"});
             }
         }
         else{
-            return res.json({Status:false,Message:"This user is not exist."});
+            return res.json({status:false,message:"This user is not exist."});
        }
     });
 

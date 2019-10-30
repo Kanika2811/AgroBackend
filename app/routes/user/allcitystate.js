@@ -23,7 +23,7 @@ router.get('/allClassState', function(req,res){
                 }
                 obj["classes"] = classes;
                 state_data.push(obj)
-               return res.json({"status":true,"message":"Success","data":state_data});
+               return res.json({"status":true,"message":"Successfully Get all State and Classes data","data":state_data});
             }
         });
     });
@@ -43,7 +43,7 @@ router.get('/allClassState', function(req,res){
         let cities = yourhandle.getCities('IN',user_state);
         obj["cities"] = cities;
         cities_data.push(obj)
-        return res.json({"status":true,"message":"Success","data":cities_data});
+        return res.json({"status":true,"message":"Sucessfully Get All Cities","data":cities_data});
     });
 
     module.exports = router;

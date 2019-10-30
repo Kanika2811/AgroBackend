@@ -47,13 +47,13 @@ module.exports = function(app, passport) {
 	app.post('/api/v1/login',function(req,res,next){
 		passport.authenticate('local-login', function(err,user,req) {
 		if (err) {
-			return res.json({"success":false,"Message":err});
+			return res.json({"status":false,"message":err});
 		}
 		if (!user) {
-			return res.json({"success":false,"Message":"User Not Found!!!!"});
+			return res.json({"status":false,"message":"User Not Found!!!!"});
 		}
 		else {
-			 return res.json({"success":true,"message":"User login successfully","data":user});}
+			 return res.json({"status":true,"message":"User login successfully","data":user});}
 	  })(req,res,next)
 	});
 
@@ -78,48 +78,48 @@ module.exports = function(app, passport) {
 		typeof user_class === 'string' ||
 		typeof user_city === 'string' ||
 		typeof user_state === 'string' )) {
-			return res.json({"status":false,"Message":"Invalid data provided"});
+			return res.json({"status":false,"message":"Invalid data provided"});
 		}
 		if(name == '' || name === undefined){
-			return res.json({status:false,Message:"Please Enter Your Full Name"});
+			return res.json({status:false,message:"Please Enter Your Full Name"});
 		}
 		if(gender == '' || gender === undefined){
-			return res.json({status:false,Message:"Please Select Your Gender"});
+			return res.json({status:false,message:"Please Select Your Gender"});
 		}
 		if(dob == '' || dob === undefined){
-			return res.json({status:false,Message:"Please Enter Your Date of Birth"});
+			return res.json({status:false,message:"Please Enter Your Date of Birth"});
 		}
 		if(password == '' || password === undefined){
-			return res.json({status:false,Message:"Please Enter Your Password"});
+			return res.json({status:false,message:"Please Enter Your Password"});
 		}
 		if(email_id == '' || email_id === undefined){
-			return res.json({status:false,Message:"Please Enter Your Email Address"});
+			return res.json({status:false,message:"Please Enter Your Email Address"});
 		}
 		if (!validateEmail(email_id)) {
-			return res.json({status:false,Message:"Please Enter Valid Email Address"});
+			return res.json({status:false,message:"Please Enter Valid Email Address"});
 		}
 		if(contact_no == '' || contact_no === undefined){
-			return res.json({status:false,Message:"Please Enter Contact Number"});
+			return res.json({status:false,message:"Please Enter Contact Number"});
 		}
 		if(user_class == '' || user_class === undefined){
-			return res.json({status:false,Message:"Please Select Your Class"});
+			return res.json({status:false,message:"Please Select Your Class"});
 		}
 		if(user_state == '' || user_state === undefined){
-			return res.json({status:false,Message:"Please Select Your State"});
+			return res.json({status:false,message:"Please Select Your State"});
 		}
 		if(user_city == '' || user_city === undefined){
-			return res.json({status:false,Message:"Please Select Your State"});
+			return res.json({status:false,message:"Please Select Your State"});
 		}
 
 		passport.authenticate('local-signup', function(err,user,req) {
 			if (err) {
-				return res.json({"success":false,"Message":err});
+				return res.json({"status":false,"message":err});
 			}
 			if (!user) {
-				return res.json({"success":false,'Message':'That username is already taken.'});
+				return res.json({"status":false,'message':'That username is already taken.'});
 			}
 			else {
-				 return res.json({"success":true,"Message":"Please Verified Your OTP","data":user});}
+				 return res.json({"status":true,"message":"Please Verified Your OTP","data":user});}
 		  })(req,res,next)
 
 
@@ -167,10 +167,10 @@ module.exports = function(app, passport) {
 			contact_no,
 			} = req.body;
 		if (!(typeof contact_no === 'string' )) {
-			return res.json({"status":false,"Message":"Invalid data provided"});
+			return res.json({"status":false,"message":"Invalid data provided"});
 		}
 		if(contact_no == '' || contact_no === undefined){
-			return res.json({status:false,Message:"Please Provide Contact Number"});
+			return res.json({status:false,message:"Please Provide Contact Number"});
 		}
 		connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
 			if (err)
@@ -190,7 +190,7 @@ module.exports = function(app, passport) {
 								obj["otp"] = otp;
 								user_data.push(obj)
 								
-								return res.json({status:true,Message:"Forgot Password OTP RESEND SUCCESSFULLY!!!",data:user_data});
+								return res.json({status:true,message:"Forgot Password OTP RESEND SUCCESSFULLY!!!",data:user_data});
 							}
 							else{
 								return res.json({"error":err});
@@ -199,11 +199,11 @@ module.exports = function(app, passport) {
 	
 					}
 					else{
-						return res.json({status:false,Message:"Please Check Contact Number."});
+						return res.json({status:false,message:"Please Check Contact Number."});
 					}
 				})
 			} else {
-				return res.json({status:false,Message:"This user is not exist."});
+				return res.json({status:false,message:"This user is not exist."});
 			}
 		 });
 	
@@ -219,41 +219,41 @@ module.exports = function(app, passport) {
 		if (!(typeof contact_no === 'string' ||
 		typeof otp === 'string' ||
 		typeof new_password === 'string')) {
-			return res.json({"status":false,"Message":"Invalid data provided"});
+			return res.json({"status":false,"message":"Invalid data provided"});
 		}
 		if(contact_no == '' || contact_no === undefined){
-			return res.json({status:false,Message:"Please Provide Contact Number"});
+			return res.json({status:false,message:"Please Provide Contact Number"});
 		}
 		if(otp == '' || otp === undefined){
-			return res.json({status:false,Message:"Please Provide OTP "});
+			return res.json({status:false,message:"Please Provide OTP "});
 		}
 		if(new_password == '' || new_password === undefined){
-			return res.json({status:false,Message:"Please Provide New Password"});
+			return res.json({status:false,message:"Please Provide New Password"});
 		}
 		connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
 			if (err)
 				return done(err);
 			if (rows.length) {
 				if(otp == rows[0].otp){
-					console.log("we are checking");
+					
 					passport.authenticate('local-forgot-password', function(err, user, done) {
 						if (err) {
 						return next(err); 
 						}
 						if (!user) {
-							return res.json({status:false,Message:"Please provide correct information"});
+							return res.json({status:false,message:"Please provide correct information"});
 						}
 						else {
-							return res.json({status:true,Message:"Password Updated Successfully",data:user});
+							return res.json({status:true,message:"Password Updated Successfully",data:user});
 						}
 					})(req, res);
 				}
 				else{
-					return res.json({status:false,Message:"OTP is not Verified. Please Check Again"});
+					return res.json({status:false,message:"OTP is not Verified. Please Check Again"});
 				}
 
 			} else {
-				return res.json({status:false,Message:"This user is not exist."});
+				return res.json({status:false,message:"This user is not exist."});
 			}
 		});
 	});

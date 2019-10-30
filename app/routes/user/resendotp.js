@@ -16,10 +16,10 @@ router.post('/resendOTP', async (req, res) => {
         contact_no,
         } = req.body;
     if (!(typeof contact_no === 'string' )) {
-        return res.json({"status":false,"Message":"Invalid data provided"});
+        return res.json({"status":false,"message":"Invalid data provided"});
     }
     if(contact_no == '' || contact_no === undefined){
-        return res.json({status:false,Message:"Please Provide Contact Number"});
+        return res.json({status:false,message:"Please Provide Contact Number"});
     }
     connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
         if (err)
@@ -39,7 +39,7 @@ router.post('/resendOTP', async (req, res) => {
                             obj["otp"] = otp;
                             user_data.push(obj)
                             
-                            return res.json({status:true,Message:"OTP RESEND SUCCESSFULLY!!!",data:user_data});
+                            return res.json({status:true,message:"OTP RESEND SUCCESSFULLY!!!",data:user_data});
                         }
                         else{
                             return res.json({"error":err});
@@ -48,11 +48,11 @@ router.post('/resendOTP', async (req, res) => {
 
                 }
                 else{
-                    return res.json({status:false,Message:"Please Check Contact Number."});
+                    return res.json({status:false,message:"Please Check Contact Number."});
                 }
             })
         } else {
-            return res.json({status:false,Message:"This user is not exist."});
+            return res.json({status:false,message:"This user is not exist."});
         }
      });
 });

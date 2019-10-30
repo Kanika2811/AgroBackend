@@ -34,13 +34,13 @@ router.get('/UserClass', function(req,res){
         }
 
         if(class_name == '' || class_name === undefined){
-            return res.json({status:false,Message:"Please Enter Class Name."});
+            return res.json({status:false,message:"Please Enter Class Name."});
         }
         if(board == '' || board === undefined){
-            return res.json({status:false,Message:"Please Enter Class Board."});
+            return res.json({status:false,message:"Please Enter Class Board."});
         }
         if(stream == '' || stream === undefined){
-            return res.json({status:false,Message:"Please Enter Class Stream"});
+            return res.json({status:false,message:"Please Enter Class Stream"});
         }
         
         connection.query('select * from classes WHERE class_name = ? and stream=?', [class_name,stream],function(error,rows,fields){
@@ -81,16 +81,16 @@ router.get('/UserClass', function(req,res){
         }
 
         if(class_name == '' || class_name === undefined){
-            return res.json({status:false,Message:"Please Provide Class Name."});
+            return res.json({status:false,message:"Please Provide Class Name."});
         }
         if(board == '' || board === undefined){
-            return res.json({status:false,Message:"Please Provide Class Board."});
+            return res.json({status:false,message:"Please Provide Class Board."});
         }
         if(stream == '' || stream === undefined){
-            return res.json({status:false,Message:"Please Provide Class Stream"});
+            return res.json({status:false,message:"Please Provide Class Stream"});
         }
         if(class_id == '' || class_id === undefined){
-            return res.json({status:false,Message:"Please Provide Class Id"});
+            return res.json({status:false,message:"Please Provide Class Id"});
         }
 
 
@@ -109,7 +109,7 @@ router.get('/UserClass', function(req,res){
                         console.log('error in this query'+err); }
                     else{
                         connection.query("SELECT * FROM classes WHERE id=?",[class_id], function(err, rows) {
-                        return res.json({"message":"Edit class successfully!!!","data":rows[0]});
+                        return res.json({"status":"true","message":"Edit class successfully!!!","data":rows[0]});
                         });
                     }
                 });
@@ -126,7 +126,7 @@ router.get('/UserClass', function(req,res){
             if(!!err){
                  console.log('error in this query'+err)}
             else{
-                return res.json({"message":"class deleted successfully!!"})
+                return res.json({"status":"true","message":"class deleted successfully!!"})
             }
 
         });
