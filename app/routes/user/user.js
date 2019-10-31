@@ -165,7 +165,7 @@ module.exports = function(app, passport) {
 	app.get('/api/v1/forgotPassword', async (req, res) => {
 		let forgotPassword = {
 			contact_no,
-			} = req.body;
+			} = req.query;
 		if (!(typeof contact_no === 'string' )) {
 			return res.json({"status":false,"message":"Invalid data provided"});
 		}
