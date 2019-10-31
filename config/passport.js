@@ -40,6 +40,7 @@ module.exports = function(passport) {
         },
         function(req,username, password, done) {
             connection.query("SELECT * FROM users WHERE contact_no = ?",[username], function(err, rows) {
+                
                 if (err)
                     return done(err);
                 if (rows.length) {
@@ -56,12 +57,11 @@ module.exports = function(passport) {
                     }
                     sendOtp.send(username, Constants.OTP_SENDER_ID,otp, function (error, data) {
                         jwt.sign({user},'SuperSecRetKey', { expiresIn: 60 }, (err, token) => {
-                          if(!err){
-                              
+                          if(!err){  
                             var insertQuery = "INSERT INTO users (name,gender,dob, password, email_id, contact_no,token,otp,user_class,user_city,user_state) values (?,?,?,?,?,?,?,?,?,?,?)";
                             connection.query(insertQuery,[req.body.name,req.body.gender,req.body.dob,newUserMysql.password, req.body.email_id,username,token,otp,req.body.user_class,req.body.user_city,req.body.user_state],function(err, rows) {
+                            if(!err){
                                 connection.query("SELECT * FROM users WHERE contact_no = ?",[username], function(err, rows) {
-                                    
                                     let obj ={};
                                     
                                     obj["contact_no"] =  rows[0].contact_no;
@@ -69,6 +69,10 @@ module.exports = function(passport) {
                                     
                                     return done(null, obj);
                                 });
+                            }
+                            else{
+                                return done(err);
+                            }
                             });
                           }
                         });

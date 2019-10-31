@@ -24,9 +24,9 @@ CREATE TABLE `' + dbconfig.database + '`.`' + dbconfig.users_table + '` ( \
     `email_id` varchar(50) NOT NULL, \
     `contact_no` VARCHAR(10) NOT NULL, \
     `dob` date NOT NULL, \
-    `user_class` int(2) NOT NULL, \
+    `user_class` VARCHAR(10) NOT NULL, \
     `user_city` varchar(20) NOT NULL, \
-    `user_state` varchar(20) NOT NULL, \
+    `user_state` varchar(30) NOT NULL, \
     `is_verified` tinyint(1) DEFAULT 0 , \
     `is_video_purchased` VARCHAR(7) DEFAULT 0, \
     `otp` int(4), \
