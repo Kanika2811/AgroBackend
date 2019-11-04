@@ -11,6 +11,17 @@ router.get('/userHome', function(req,res){
    // CommonComponent.verifyToken(req,res);
     let Home_data =[];
     let class_id;
+    let addclass = {
+        user_class
+    } = req.query;
+    if (!(typeof user_class === 'string')) {
+        return res.json({"status":false,"message":"Invalid data provided"});
+    }
+
+    if(user_class == '' || user_class === undefined){
+        return res.json({status:false,message:"Please Provide User Class",data:""});
+    }
+
     connection.query("SELECT * FROM classes where class_name=?",[req.query.user_class] ,function(err, rows,field) {
         if (err)
         return done(err);
@@ -21,7 +32,7 @@ router.get('/userHome', function(req,res){
                 return done(err);
                 if (rows.length) {
                     let obj ={};
-                    obj["User_Subject_List"] =rows;
+                    obj["user_subject_list"] =rows;
                     
                     connection.query("SELECT * FROM teacher", function(err, rows,field) {
                         if (err)
@@ -42,10 +53,6 @@ router.get('/userHome', function(req,res){
                                         else {
                                             return res.json({status:false,message:"Data is empty"});
                                         }
-
-
-                                Home_data.push(obj)
-                                return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
                                     });
                         }
                         else {

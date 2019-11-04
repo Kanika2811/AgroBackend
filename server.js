@@ -17,6 +17,8 @@ const editContactNo = require('./app/routes/user/editcontactno.js');
 const subjects = require('./app/routes/subjects/subject.js');
 const profileImage = require('./app/routes/user/userprofileimage.js');
 const userHome = require('./app/routes/UserHome/userhome.js');
+const chapters = require('./app/routes/chapters/chapter.js');
+const chaptervideos=require('./app/routes/chapterVideos/chaptervideos.js');
 
 
 var passport = require('passport');
@@ -53,11 +55,12 @@ app.use(apiVersion,editContactNo);
 app.use(apiVersion,subjects);
 app.use(apiVersion,profileImage);
 app.use(apiVersion,userHome);
+app.use(apiVersion,chapters);
+app.use(apiVersion,chaptervideos);
 
 
 
 require('./app/routes/user/user.js')(app, passport); // load our routes and pass in our app and fully configured passport
-require('./app/routes/chapters/chapter.js')(app);
-require('./app/routes/topics/topic.js')(app);
+
 app.listen(port);
 console.log('The magic happens on port ' + port);

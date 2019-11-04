@@ -10,30 +10,30 @@ connection.query('USE ' + dbconfig.database);
 var CommonComponent = require("../../../config/CommonComponent");
 
 
-router.get('/chapters', function(req,res){
+router.get('/chapterVideos', function(req,res){
     //CommonComponent.verifyToken(req,res)
     let addclass = {
-        subject_id
+        chapter_id
     } = req.query;
-    if (!(typeof subject_id === 'string')) {
+    if (!(typeof chapter_id === 'string')) {
         return res.json({"status":false,"message":"Invalid data provided"});
     }
 
-    if(subject_id == '' || subject_id === undefined){
-        return res.json({status:false,message:"Please Provide subject id",data:""});
+    if(chapter_id == '' || chapter_id === undefined){
+        return res.json({status:false,message:"Please Provide chapter id",data:""});
     }
 
 
-        connection.query("select * from chapters where subject_id=?",[subject_id], function(error,rows, fields){
+        connection.query("select * from videos where chapter_id=?",[chapter_id], function(error,rows, fields){
             if(!!error)
              return done("error in this query");
             if(rows.length==0)
             {
-                return res.json({status:false,"message":"There is no chapters in this Subject id"});
+                return res.json({status:false,"message":"There is no videos in this chapter id"});
             }
             else
             {
-                return res.json({status:true,"message":"chpater list","data":rows});
+                return res.json({status:true,"message":"video list","data":rows});
             }
         });
     });
