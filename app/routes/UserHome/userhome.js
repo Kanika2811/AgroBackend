@@ -45,10 +45,18 @@ router.get('/userHome', function(req,res){
                                         if (rows.length) {
                                             obj["demo_video_list"] =rows;
                 
-                
-                
-                                                Home_data.push(obj)
-                                                return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
+                                            connection.query("SELECT * FROM subscription where class_id=?",[class_id], function(err, rows,field) {
+                                                if (err)
+                                                    return done(err);
+                                                if (rows.length) {
+                                                        obj["subscription"] =rows;
+                                                         Home_data.push(obj)
+                                                        return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
+                                                }
+                                                else{
+                                                    return res.json({status:false,message:"Data is empty"});
+                                                }
+                                            });
                                         }
                                         else {
                                             return res.json({status:false,message:"Data is empty"});
