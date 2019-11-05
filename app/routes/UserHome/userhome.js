@@ -8,7 +8,7 @@ const CommonComponent = require("../../../config/CommonComponent");
 
 
 router.get('/userHome', function(req,res){
-   // CommonComponent.verifyToken(req,res);
+    CommonComponent.verifyToken(req,res);
     let Home_data =[];
     let class_id;
     let addclass = {

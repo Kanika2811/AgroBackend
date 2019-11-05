@@ -11,7 +11,7 @@ var CommonComponent = require("../../../config/CommonComponent");
 
 
 router.get('/chapters', function(req,res){
-    //CommonComponent.verifyToken(req,res)
+    CommonComponent.verifyToken(req,res)
     let addclass = {
         subject_id
     } = req.query;

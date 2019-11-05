@@ -11,7 +11,7 @@ var CommonComponent = require("../../../config/CommonComponent");
 
 
 router.get('/chapterVideos', function(req,res){
-    //CommonComponent.verifyToken(req,res)
+    CommonComponent.verifyToken(req,res)
     let addclass = {
         chapter_id
     } = req.query;
