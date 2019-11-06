@@ -12,14 +12,19 @@ router.get('/userHome', function(req,res){
     let Home_data =[];
     let class_id;
     let addclass = {
-        user_class
+        user_class,
+        contact_no
     } = req.query;
-    if (!(typeof user_class === 'string')) {
+    if (!(typeof user_class === 'string'||
+    typeof contact_no==='string')) {
         return res.json({"status":false,"message":"Invalid data provided"});
     }
 
     if(user_class == '' || user_class === undefined){
         return res.json({status:false,message:"Please Provide User Class",data:""});
+    }
+    if(contact_no == '' || contact_no === undefined){
+        return res.json({status:false,message:"Please Provide contact no",data:""});
     }
 
     connection.query("SELECT * FROM classes where class_name=?",[req.query.user_class] ,function(err, rows,field) {
@@ -50,8 +55,50 @@ router.get('/userHome', function(req,res){
                                                     return done(err);
                                                 if (rows.length) {
                                                         obj["subscription"] =rows;
-                                                         Home_data.push(obj)
-                                                        return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
+                                                        //Home_data.push(obj);
+                                                         connection.query("SELECT * FROM users where contact_no=?",[contact_no], function(err, rows,field) {
+                                                            if (err)
+                                                             return done(err);
+                                                            if (rows.length) {
+                                                                connection.query("SELECT * FROM favourite_videos where user_id=?",[rows[0].id], function(err, rows,field) {
+                                                                    if (err)
+                                                                     return done(err);
+                                                                    if (rows.length) {
+                                                                        let video_id_array =[];
+                                                                        for(let i=0;i<rows.length;i++)
+                                                                        {
+                                                                            video_id_array.push(rows[i].video_id);
+                                                                        }
+                                                                        console.log(video_id_array);
+                                                                        connection.query("SELECT * FROM videos where id in("+video_id_array+")", function(err, rows,field) {
+                                                                            if (err)
+                                                                                return done(err);
+                                                                            if (rows.length) {
+                                                                                obj["favourite_videos"] =rows;
+                                                                                Home_data.push(obj);
+                                                                                return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
+                                                                            }
+                                                                            else{
+                                                                                return res.json({status:false,message:"Data is empty"});
+                                                                            }
+                                                                            
+
+                                                                        });
+                                                                        //return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
+                                                                    }
+                                                                    else{
+                                                                        return res.json({status:false,message:"Data is empty"});
+                                                                    }
+                                                                });
+                                                            }
+                                                            else
+                                                            {
+                                                                return res.json({status:false,message:"Data is empty"});
+                                                            }
+                                                        });
+
+
+                                                        
                                                 }
                                                 else{
                                                     return res.json({status:false,message:"Data is empty"});
