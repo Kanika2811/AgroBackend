@@ -19,6 +19,8 @@ const profileImage = require('./app/routes/user/userprofileimage.js');
 const userHome = require('./app/routes/UserHome/userhome.js');
 const chapters = require('./app/routes/chapters/chapter.js');
 const chaptervideos=require('./app/routes/chapterVideos/chaptervideos.js');
+const like_comment=require('./app/routes/likecommentfavourite/like&comment.js');
+const favourite=require('./app/routes/likecommentfavourite/favourite.js');
 
 
 var passport = require('passport');
@@ -57,6 +59,8 @@ app.use(apiVersion,profileImage);
 app.use(apiVersion,userHome);
 app.use(apiVersion,chapters);
 app.use(apiVersion,chaptervideos);
+app.use(apiVersion,like_comment);
+app.use(apiVersion,favourite);
 
 
 
