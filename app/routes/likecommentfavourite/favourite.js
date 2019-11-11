@@ -26,11 +26,11 @@ var CommonComponent = require("../../../config/CommonComponent");
         let tokens = req.headers['authorization'];
         tokens = tokens.substr(7);
         connection.query("SELECT * FROM users where token=?",[tokens] ,function(err, rows,field) {
-            let user_id = rows[0].id;
             if (err)
                 return  res.json({status:false,message:"getting error",error:err});
                     
             if (rows.length) {
+                let user_id = rows[0].id;
                 connection.query("insert into favourite_videos(video_id,user_id) values(?,?)",[id,user_id] ,function(err, rows,field) {
                     if (err)
                         return  res.json({status:false,message:"getting error",error:err});
@@ -61,11 +61,12 @@ var CommonComponent = require("../../../config/CommonComponent");
         let tokens = req.headers['authorization'];
         tokens = tokens.substr(7);
         connection.query("SELECT * FROM users where token=?",[tokens] ,function(err, rows,field) {
-            let user_id = rows[0].id;
+            
             if (err)
                 return  res.json({status:false,message:"getting error",error:err});
                     
             if (rows.length) {
+                let user_id = rows[0].id;
                 connection.query("delete from favourite_videos where video_id=? and user_id=?",[id,user_id] ,function(err, rows,field) {
                     if (err)
                         return  res.json({status:false,message:"getting error",error:err});

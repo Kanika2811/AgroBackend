@@ -29,7 +29,6 @@ var CommonComponent = require("../../../config/CommonComponent");
         let tokens = req.headers['authorization'];
         tokens = tokens.substr(7);
         connection.query("SELECT * FROM users where token=?",[tokens] ,function(err, rows,field) {
-            let user_name = rows[0].name;
             if (err)
                 return  res.json({status:false,message:"getting error",error:err});
                     
@@ -40,7 +39,26 @@ var CommonComponent = require("../../../config/CommonComponent");
                         if (err)
                             return  res.json({status:false,message:"getting error",error:err});
                         if (rows.length) {
-                            return  res.json({status:true,message:"Get comments Successfully",data:rows});
+                            let video_comment_data = rows;
+                            let comment_user =[];
+                            for(let i=0;i<rows.length;i++)
+                            {
+                                comment_user.push(rows[i].user_id);
+                            }
+                            connection.query("select * from users where id in("+comment_user+")",function(err, rows,field) {
+                                if (err)
+                                    return  res.json({status:false,message:"getting error",error:err});
+                                if (rows.length) {
+                                    for(let i=0;i<rows.length;i++)
+                                    {
+                                        video_comment_data[i].user_name = rows[i].name;
+                                        video_comment_data[i].user_profile_image = rows[i].profile_image;
+                                        return  res.json({status:true,message:"Get comments Successfully",data:video_comment_data});
+                                    }
+
+                                }
+                            })
+                            
                         }  
                         else
                         {
