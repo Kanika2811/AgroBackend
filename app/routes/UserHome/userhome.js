@@ -91,9 +91,9 @@ router.get('/userHome', function(req,res){
                                             let video_id_array =[];
                                             for(let i=0;i<rows.length;i++)
                                             {
-                                                video_id_array.push(rows[i].video_id.toString());
+                                                video_id_array.push("'"+rows[i].video_id+"'");
                                             }
-                                            connection.query('SELECT * FROM videos where video_id in('+video_id_array+')', function(err, rows,field) {
+                                            connection.query("SELECT * FROM videos where video_id in("+video_id_array+")", function(err, rows,field) {
                                                 if (err)
                                                     return res.json({status:false,message:"getting error in videos list according to favourite videos",error:err});
                                                 if (rows.length) {
