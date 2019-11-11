@@ -91,7 +91,7 @@ router.get('/userHome', function(req,res){
                                             let video_id_array =[];
                                             for(let i=0;i<rows.length;i++)
                                             {
-                                                video_id_array.push(rows[i].video_id.to.toString());
+                                                video_id_array.push(rows[i].video_id.toString());
                                             }
                                             connection.query("SELECT * FROM videos where video_id in("+video_id_array+")", function(err, rows,field) {
                                                 if (err)
