@@ -9,7 +9,7 @@ const router = express.Router();
 connection.query('USE ' + dbconfig.database);
 var CommonComponent = require("../../../config/CommonComponent");
 
-    router.get('/like&comment', function(req,res){
+    router.get('/likeAndomment', function(req,res){
         CommonComponent.verifyToken(req,res);
         let addclass = {
             id,
@@ -75,7 +75,7 @@ var CommonComponent = require("../../../config/CommonComponent");
         });
     })
 
-    router.post('/like&comment',function(req,res){
+    router.post('/likeAndComment',function(req,res){
         CommonComponent.verifyToken(req,res);
         let addclass = {
             id,
