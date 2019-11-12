@@ -117,7 +117,7 @@ var CommonComponent = require("../../../config/CommonComponent");
                 }
                 if(operation == "like")
                 {
-                    connection.query("select video_like from videos where id=?",[video_id] ,function(err, rows,field) {
+                    connection.query("select video_like from videos where video_id=?",[video_id] ,function(err, rows,field) {
                         if (err)
                             return  res.json({status:false,message:"getting error",error:err});
                         if (rows.length) {
