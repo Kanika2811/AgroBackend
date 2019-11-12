@@ -8,8 +8,10 @@ const express = require('express');
 const router = express.Router();
 connection.query('USE ' + dbconfig.database);
 var CommonComponent = require("../../../config/CommonComponent");
+const nanoid = require('nanoid/generate');
 
-    
+
+
 
     router.post('/favourite',function(req,res){
         CommonComponent.verifyToken(req,res);
@@ -35,23 +37,9 @@ var CommonComponent = require("../../../config/CommonComponent");
                     if (err)
                         return  res.json({status:false,message:"getting error",error:err});
                     if(rows.length){
-                        let i=rows.length;
-                        i--;
-                        let create_fav_id=rows[i].favourite_video_id;
-                        create_fav_id= create_fav_id.substr(3);
-                        create_fav_id++;
-                        if(create_fav_id.toString().length==1)
-                        {
-                            create_fav_id="MRF00"+ create_fav_id;
-                        }
-                        else if(create_fav_id.toString().length==2)
-                        {
-                            create_fav_id="MRF0"+ create_fav_id;
-                        }
-                        else 
-                        {
-                            create_fav_id="MRF"+ create_fav_id;
-                        }
+                       
+                        let create_fav_id=nanoid('1234567890abcdefghijklmnopqrstuvwxyz', 6);
+                        
                         connection.query("insert into favourite_videos(favourite_video_id,video_id,user_id) values(?,?,?)",[create_fav_id,video_id,user_id] ,function(err, rows,field) {
                             if (err)
                                 return  res.json({status:false,message:"getting error",error:err});
@@ -64,7 +52,9 @@ var CommonComponent = require("../../../config/CommonComponent");
                     }
                     else
                     {
-                        connection.query("insert into favourite_videos(favourite_video_id,video_id,user_id) values(?,?,?)",["MRF001",video_id,user_id] ,function(err, rows,field) {
+                        let create_fav_id=nanoid('1234567890abcdefghijklmnopqrstuvwxyz', 6);
+                        
+                        connection.query("insert into favourite_videos(favourite_video_id,video_id,user_id) values(?,?,?)",[create_fav_id,video_id,user_id] ,function(err, rows,field) {
                             if (err)
                                 return  res.json({status:false,message:"getting error",error:err});
                             else{
