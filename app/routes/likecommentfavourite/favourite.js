@@ -49,7 +49,7 @@ var CommonComponent = require("../../../config/CommonComponent");
     router.delete('/favourite',function(req,res){
         CommonComponent.verifyToken(req,res);
         let addclass = {
-            id
+            video_id
         } = req.body;
         if (!(typeof id === 'string')) {
             return res.json({"status":false,"message":"Invalid data provided"});
@@ -67,7 +67,7 @@ var CommonComponent = require("../../../config/CommonComponent");
                     
             if (rows.length) {
                 let user_id = rows[0].id;
-                connection.query("delete from favourite_videos where video_id=? and user_id=?",[id,user_id] ,function(err, rows,field) {
+                connection.query("delete from favourite_videos where video_id=? and user_id=?",[video_id,user_id] ,function(err, rows,field) {
                     if (err)
                         return  res.json({status:false,message:"getting error",error:err});
                     else{
