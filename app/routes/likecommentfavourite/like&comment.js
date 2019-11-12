@@ -53,8 +53,9 @@ var CommonComponent = require("../../../config/CommonComponent");
                                     {
                                         video_comment_data[i].user_name = rows[i].name;
                                         video_comment_data[i].user_profile_image = rows[i].profile_image;
-                                        return  res.json({status:true,message:"Get comments Successfully",data:video_comment_data});
+                                        
                                     }
+                                    return  res.json({status:true,message:"Get comments Successfully",data:video_comment_data});
 
                                 }
                             })
