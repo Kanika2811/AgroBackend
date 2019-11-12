@@ -20,9 +20,7 @@ router.post('/userProfileImage', function(req,res){
 
 //router.post('/teacher',function(req,res){
     //CommonComponent.verifyToken(req,res)
-    //console.log(req.headers["content-type"]);
-    //console.log(req.headers["authorization"]);
-    //console.log(req.body.teacherImage);
+    
 
 //})
 

@@ -45,7 +45,7 @@ router.get('/UserClass', function(req,res){
         
         connection.query('select * from classes WHERE class_name = ? and stream=?', [class_name,stream],function(error,rows,fields){
             if(error){
-                console.log(error);
+                return  res.json({status:false,message:"getting error",error:error});
             }
             if(rows.length >= 1&&class_name === rows[0].class_name){
                     return res.json({"status":false,"message":"Class already exist"});
@@ -96,7 +96,7 @@ router.get('/UserClass', function(req,res){
 
         connection.query('select * from classes WHERE class_name = ? and stream=?', [class_name,stream],function(error,rows,fields){
             if(error){
-                console.log(error);
+                return  res.json({status:false,message:"getting error",error:error});
             }
             if(rows.length >= 1&&class_name === rows[0].class_name){
                     return res.json({"status":false,"message":"Class already exist"});
@@ -106,7 +106,7 @@ router.get('/UserClass', function(req,res){
                 let sql ='UPDATE classes SET class_name = ?, board=?, stream=?, updated_timestamp=? WHERE id = ?';
                 connection.query(sql, [class_name,board, stream,new Date(dt.now()), class_id], function (err, rows, fields) {
                     if(!!err) {
-                        console.log('error in this query'+err); }
+                        return  res.json({status:false,message:"getting error",error:error});}
                     else{
                         connection.query("SELECT * FROM classes WHERE id=?",[class_id], function(err, rows) {
                         return res.json({"status":"true","message":"Edit class successfully!!!","data":rows[0]});
@@ -124,7 +124,7 @@ router.get('/UserClass', function(req,res){
 
         connection.query('DELETE FROM classes WHERE id=?',[req.body.id],function(err,rows,fields){
             if(!!err){
-                 console.log('error in this query'+err)}
+                return  res.json({status:false,message:"getting error",error:err});}
             else{
                 return res.json({"status":"true","message":"class deleted successfully!!"})
             }

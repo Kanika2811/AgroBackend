@@ -56,8 +56,6 @@ var CommonComponent = require("../../../config/CommonComponent");
                             if (err)
                                 return  res.json({status:false,message:"getting error",error:err});
                             else{
-                                console.log(rows.insertId);
-
                                 return  res.json({status:true,message:"video Favourite successful"});
                             }   
                             

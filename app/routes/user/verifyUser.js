@@ -28,10 +28,8 @@ router.post('/VerifyOTP', async (req, res) => {
     }
 
     connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
-       if(err){
-           console.log(err)
-           return err;
-       }
+        if (err)
+            return  res.json({status:false,message:"getting error",error:err});
       
        if(rows.length){
             if(otp == rows[0].otp){
@@ -39,13 +37,11 @@ router.post('/VerifyOTP', async (req, res) => {
                     connection.query(sql,["1",new Date(dt.now()),contact_no], function(err, rows,fields) {
                         if(!err){
                             connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
-                             console.log(rows[0]);
-                             console.log("err",err);
                             return res.json({status:true,message:"User verified successfully!!!","data":rows[0]});
                             });
                         }
                         else{
-                            return res.json({"error":err});
+                            return  res.json({status:false,message:"getting error",error:err});
                         }
                 });
 

@@ -12,15 +12,15 @@ var CommonComponent = require("../../../config/CommonComponent");
     router.get('/likeAndomment', function(req,res){
         CommonComponent.verifyToken(req,res);
         let addclass = {
-            id,
+            video_id,
             operation
         } = req.query;
-        if (!(typeof id === 'string'||
+        if (!(typeof video_id === 'string'||
         typeof operation === 'string')) {
             return res.json({"status":false,"message":"Invalid data provided"});
         }
     
-        if(id == '' || id === undefined){
+        if(video_id == '' || video_id === undefined){
             return res.json({status:false,message:"Please Provide video id",data:""});
         }
         if(operation == '' || operation === undefined){
@@ -35,7 +35,7 @@ var CommonComponent = require("../../../config/CommonComponent");
             if (rows.length) {
                 if(operation == "comment")
                 {
-                    connection.query("select * from comments where video_id=?",[id] ,function(err, rows,field) {
+                    connection.query("select * from comments where video_id=?",[video_id] ,function(err, rows,field) {
                         if (err)
                             return  res.json({status:false,message:"getting error",error:err});
                         if (rows.length) {
@@ -78,15 +78,15 @@ var CommonComponent = require("../../../config/CommonComponent");
     router.post('/likeAndComment',function(req,res){
         CommonComponent.verifyToken(req,res);
         let addclass = {
-            id,
+            video_id,
             operation
         } = req.body;
-        if (!(typeof id === 'string'||
+        if (!(typeof video_id === 'string'||
         typeof operation === 'string')) {
             return res.json({"status":false,"message":"Invalid data provided"});
         }
     
-        if(id == '' || id === undefined){
+        if(video_id == '' || video_id === undefined){
             return res.json({status:false,message:"Please Provide video id",data:""});
         }
         if(operation == '' || operation === undefined){
@@ -96,17 +96,17 @@ var CommonComponent = require("../../../config/CommonComponent");
         let tokens = req.headers['authorization'];
         tokens = tokens.substr(7);
         connection.query("SELECT * FROM users where token=?",[tokens] ,function(err, rows,field) {
-            let user_id = rows[0].id;
             if (err)
                 return  res.json({status:false,message:"getting error",error:err});
                     
             if (rows.length) {
+                let user_id = rows[0].id;
                 if(operation == "comment")
                 {
                     if(req.body.comment == '' || req.body.comment === undefined){
                         return res.json({status:false,message:"Please Provide user comment",data:""});
                     }
-                    connection.query("insert into comments(video_id,user_id,comment) values(?,?,?)",[id,user_id,req.body.comment] ,function(err, rows,field) {
+                    connection.query("insert into comments(video_id,user_id,comment) values(?,?,?)",[video_id,user_id,req.body.comment] ,function(err, rows,field) {
                         if (err)
                             return  res.json({status:false,message:"getting error",error:err});
                         else{
@@ -117,12 +117,12 @@ var CommonComponent = require("../../../config/CommonComponent");
                 }
                 if(operation == "like")
                 {
-                    connection.query("select video_like from videos where id=?",[id] ,function(err, rows,field) {
+                    connection.query("select video_like from videos where id=?",[video_id] ,function(err, rows,field) {
                         if (err)
                             return  res.json({status:false,message:"getting error",error:err});
                         if (rows.length) {
                             ++rows[0].video_like;
-                            connection.query("update videos set video_like=? where id=?",[rows[0].video_like,id] ,function(err, rows,field) {
+                            connection.query("update videos set video_like=? where id=?",[rows[0].video_like,video_id] ,function(err, rows,field) {
                                 if (err)
                                     return  res.json({status:false,message:"getting error",error:err});
                                 else{

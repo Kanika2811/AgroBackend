@@ -29,8 +29,8 @@ router.put('/editContactNo', async (req, res) => {
         if (rows.length) {
             let sql ='UPDATE users SET contact_no = ?, updated_timestamp=? WHERE contact_no = ?';
             connection.query(sql, [new_contact_no,new Date(dt.now()),old_contact_no], function (err, rows, fields) {
-                if(!!err) {
-                     console.log('error in this query'+err); }
+                if (err)
+                    return  res.json({status:false,message:"getting error",error:err});
                 else{
                     connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[new_contact_no], function(err, rows) {
                         rows[0].dob=rows[0].dob.toLocaleString().slice(0,10).replace('/','-').replace('/','-');

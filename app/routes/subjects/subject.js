@@ -22,8 +22,8 @@ var CommonComponent = require("../../../config/CommonComponent");
             return res.json({status:false,Message:"Please Select Class first"});
         }
         connection.query('select * from subject where class_id=?',[class_id],function(error,rows, fields){
-            if(!!error)
-                console.log("error in this query");
+            if (err)
+                return  res.json({status:false,message:"getting error",error:err});
             if(rows.length==0)
             {
                 return res.json({"message":"There is no subject in this Class"});
@@ -60,16 +60,15 @@ var CommonComponent = require("../../../config/CommonComponent");
         }
 
         connection.query('select * from subject WHERE subject_name = ? and medium=? and class_id=?', [subject_name,medium,class_id],function(error,rows,fields){
-            if(error){
-                console.log(error);
-            }
+            if (err)
+                return  res.json({status:false,message:"getting error",error:err});
             if(rows.length >= 1&&subject_name === rows[0].subject_name){
                     return res.json({"status":false,"message":"Subject already exist"});
             }
             else {
                 connection.query('insert into subject(class_id,subject_name,medium) values(?,?,?)',[class_id,subject_name,medium],function(error,rows,fields){
-                    if(!!error)
-                        console.log(error);
+                    if (error){
+                        return  res.json({status:false,message:"getting error",error:error});}
                     else{
                         connection.query("select * from subject WHERE subject_name = ? and medium=? and class_id=?",[subject_name,medium,class_id], function(err, rows) {
                         return res.json({"message":"Add Subject successfully!!!","data":rows[0]});
@@ -112,9 +111,8 @@ var CommonComponent = require("../../../config/CommonComponent");
             return res.json({status:false,Message:"Please Provide Subject Medium Name."});
         }
         connection.query('select * from subject WHERE subject_name = ? and medium=? and class_id=?', [subject_name,medium,class_id],function(error,rows,fields){
-            if(error){
-                console.log(error);
-            }
+            if (error)
+                        return  res.json({status:false,message:"getting error",error:error});
             if(rows.length >= 1&&subject_name === rows[0].subject_name){
                     return res.json({"status":false,"message":"Subject already exist"});
             }
@@ -122,7 +120,8 @@ var CommonComponent = require("../../../config/CommonComponent");
 
                     let sql ='UPDATE subject SET subject_name = ? , medium=?, updated_timestamp=? WHERE id = ? and class_id=?';
                     connection.query(sql, [subject_name,medium,new Date(dt.now()),subject_id,class_id], function (err, rows, fields) {
-                        if(!!err) { console.log('error in this query'+err); }
+                        if (err){
+                        return  res.json({status:false,message:"getting error",error:err});}
                         else{
                             connection.query('select * from subject WHERE subject_name = ? and medium=? and class_id=?', [subject_name,medium,class_id],function(error,rows,fields){
                          return res.json({"message":"Edit Subject successfully!!!","data":rows[0]});
@@ -136,7 +135,8 @@ var CommonComponent = require("../../../config/CommonComponent");
     router.delete('/subjects',function(req,res){
         CommonComponent.verifyToken(req,res)
         connection.query('DELETE FROM subject WHERE id=?',[req.body.id],function(err,rows,fields){
-            if(!!err){ console.log('error in this query'+err)}
+            if (err){
+                return  res.json({status:false,message:"getting error",error:err});}
             else{
                 return res.json({"message":"Subject deleted successfully!!"})
             }

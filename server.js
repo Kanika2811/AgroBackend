@@ -67,4 +67,4 @@ app.use(apiVersion,favourite);
 require('./app/routes/user/user.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 app.listen(port);
-console.log('The magic happens on port ' + port);
+//console.log('The magic happens on port ' + port);
