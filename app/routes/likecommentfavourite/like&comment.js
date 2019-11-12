@@ -122,7 +122,7 @@ var CommonComponent = require("../../../config/CommonComponent");
                             return  res.json({status:false,message:"getting error",error:err});
                         if (rows.length) {
                             ++rows[0].video_like;
-                            connection.query("update videos set video_like=? where id=?",[rows[0].video_like,video_id] ,function(err, rows,field) {
+                            connection.query("update videos set video_like=? where video_id=?",[rows[0].video_like,video_id] ,function(err, rows,field) {
                                 if (err)
                                     return  res.json({status:false,message:"getting error",error:err});
                                 else{
