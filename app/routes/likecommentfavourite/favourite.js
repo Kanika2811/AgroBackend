@@ -14,13 +14,13 @@ var CommonComponent = require("../../../config/CommonComponent");
     router.post('/favourite',function(req,res){
         CommonComponent.verifyToken(req,res);
         let addclass = {
-            id
+            video_id
         } = req.body;
-        if (!(typeof id === 'string')) {
+        if (!(typeof video_id === 'string')) {
             return res.json({"status":false,"message":"Invalid data provided"});
         }
     
-        if(id == '' || id === undefined){
+        if(video_id == '' || video_id === undefined){
             return res.json({status:false,message:"Please Provide video id",data:""});
         }
         let tokens = req.headers['authorization'];
@@ -31,7 +31,27 @@ var CommonComponent = require("../../../config/CommonComponent");
                     
             if (rows.length) {
                 let user_id = rows[0].id;
-                connection.query("insert into favourite_videos(video_id,user_id) values(?,?)",[id,user_id] ,function(err, rows,field) {
+                connection.query("SELECT * FROM favourite_videos",function(err, rows,field) {
+                    if (err)
+                        return  res.json({status:false,message:"getting error",error:err});
+                    if(rows.length){
+
+                    }
+                    else
+                    {
+                        connection.query("insert into favourite_videos(favourite_video_id,video_id,user_id) values(?,?,?)",["MRF001",video_id,user_id] ,function(err, rows,field) {
+                            if (err)
+                                return  res.json({status:false,message:"getting error",error:err});
+                            else{
+                                return  res.json({status:true,message:"video Favourite successful"});
+                            }   
+                            
+                        });
+                    }
+                });
+
+
+                connection.query("insert into favourite_videos(video_id,user_id) values(?,?)",[video_id,user_id] ,function(err, rows,field) {
                     if (err)
                         return  res.json({status:false,message:"getting error",error:err});
                     else{

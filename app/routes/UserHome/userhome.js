@@ -110,6 +110,7 @@ router.get('/userHome', function(req,res){
                                         else
                                         {
                                             obj["favourite_videos"] =[];
+                                            return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
                                             
                                         }
                                     });
