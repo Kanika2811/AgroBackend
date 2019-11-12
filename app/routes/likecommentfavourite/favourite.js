@@ -35,6 +35,33 @@ var CommonComponent = require("../../../config/CommonComponent");
                     if (err)
                         return  res.json({status:false,message:"getting error",error:err});
                     if(rows.length){
+                        let i=rows.length;
+                        i--;
+                        let create_fav_id=rows[i].favourite_video_id;
+                        create_fav_id= create_fav_id.substr(3);
+                        create_fav_id++;
+                        if(create_fav_id.toString().length==1)
+                        {
+                            create_fav_id="MRF00"+ create_fav_id;
+                        }
+                        else if(create_fav_id.toString().length==2)
+                        {
+                            create_fav_id="MRF0"+ create_fav_id;
+                        }
+                        else 
+                        {
+                            create_fav_id="MRF"+ create_fav_id;
+                        }
+                        connection.query("insert into favourite_videos(favourite_video_id,video_id,user_id) values(?,?,?)",[create_fav_id,video_id,user_id] ,function(err, rows,field) {
+                            if (err)
+                                return  res.json({status:false,message:"getting error",error:err});
+                            else{
+                                console.log(rows.insertId);
+
+                                return  res.json({status:true,message:"video Favourite successful"});
+                            }   
+                            
+                        });
 
                     }
                     else
@@ -51,14 +78,7 @@ var CommonComponent = require("../../../config/CommonComponent");
                 });
 
 
-                connection.query("insert into favourite_videos(video_id,user_id) values(?,?)",[video_id,user_id] ,function(err, rows,field) {
-                    if (err)
-                        return  res.json({status:false,message:"getting error",error:err});
-                    else{
-                        return  res.json({status:true,message:"video Favourite successful"});
-                    }   
-                    
-                });
+               
             }
             else{
                 return  res.json({status:false,message:"This user Token is not Exist.."});
@@ -102,4 +122,29 @@ var CommonComponent = require("../../../config/CommonComponent");
         });
        
     })
+
+    router.delete('/clearAllFavourite',function(req,res){
+        CommonComponent.verifyToken(req,res);
+        let tokens = req.headers['authorization'];
+        tokens = tokens.substr(7);
+        connection.query("SELECT * FROM users where token=?",[tokens] ,function(err, rows,field) {
+            if (err)
+                return  res.json({status:false,message:"getting error",error:err});
+            if (rows.length) {
+                let user_id = rows[0].id;
+                connection.query("delete from favourite_videos where user_id=?",[user_id] ,function(err, rows,field) {
+                    if (err)
+                        return  res.json({status:false,message:"getting error",error:err});
+                    else{
+                        return  res.json({status:true,message:"All favourite video is clear successful"});
+                    }   
+                    
+                });
+            }
+            else{
+                return  res.json({status:false,message:"This user Token is not Exist.."});
+            }
+        });
+    });
+
 module.exports = router;
