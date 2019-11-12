@@ -35,7 +35,7 @@ var CommonComponent = require("../../../config/CommonComponent");
             if (rows.length) {
                 if(operation == "comment")
                 {
-                    connection.query("select * from comments where video_id=?",[video_id] ,function(err, rows,field) {
+                    connection.query("select video_id,comment,created_timestamp,updated_timestamp,delete_flag,user_id from comments where video_id=?",[video_id] ,function(err, rows,field) {
                         if (err)
                             return  res.json({status:false,message:"getting error",error:err});
                         if (rows.length) {
