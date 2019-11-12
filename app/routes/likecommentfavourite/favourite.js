@@ -51,11 +51,11 @@ var CommonComponent = require("../../../config/CommonComponent");
         let addclass = {
             video_id
         } = req.body;
-        if (!(typeof id === 'string')) {
+        if (!(typeof video_id === 'string')) {
             return res.json({"status":false,"message":"Invalid data provided"});
         }
     
-        if(id == '' || id === undefined){
+        if(video_id == '' || video_id === undefined){
             return res.json({status:false,message:"Please Provide video id",data:""});
         }
         let tokens = req.headers['authorization'];
