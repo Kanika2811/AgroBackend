@@ -98,9 +98,11 @@ router.get('/userHome', function(req,res){
                                                     return res.json({status:false,message:"getting error in videos list according to favourite videos",error:err});
                                                 if (rows.length) {
                                                     obj["favourite_videos"] =rows;
+                                                    obj["all_subscription_expiry"] ="1585699160000";
                                                 }
                                                 else{
                                                     obj["favourite_videos"] =[];
+                                                    obj["all_subscription_expiry"] ="1585699160000";
                                                 }
                                                 return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
 
@@ -110,6 +112,7 @@ router.get('/userHome', function(req,res){
                                         else
                                         {
                                             obj["favourite_videos"] =[];
+                                            obj["all_subscription_expiry"] ="1585699160000";
                                             return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
                                             
                                         }
