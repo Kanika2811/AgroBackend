@@ -33,6 +33,14 @@ router.get('/chapters', function(req,res){
             }
             else
             {
+                for(let i=0;i<rows.length;i++)
+                {
+                    if(rows[i].delete_flag==0){
+                        rows[i].delete_flag=false;
+                    }else{
+                        rows[i].delete_flag=true;
+                    }
+                }
                 return res.json({status:true,"message":"chpater list","data":rows});
             }
         });
