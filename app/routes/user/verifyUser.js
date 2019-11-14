@@ -37,7 +37,13 @@ router.post('/VerifyOTP', async (req, res) => {
                     connection.query(sql,["1",new Date(dt.now()),contact_no], function(err, rows,fields) {
                         if(!err){
                             connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
-                            return res.json({status:true,message:"User verified successfully!!!","data":rows[0]});
+                                if(rows[0].delete_flag==0){
+                                    rows[0].delete_flag=false;
+                                }
+                                else{
+                                    rows[0].delete_flag=true;
+                                }
+                                return res.json({status:true,message:"User verified successfully!!!","data":rows[0]});
                             });
                         }
                         else{
