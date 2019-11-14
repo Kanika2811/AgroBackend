@@ -8,6 +8,7 @@ const express = require('express');
 const router = express.Router();
 connection.query('USE ' + dbconfig.database);
 var CommonComponent = require("../../../config/CommonComponent");
+const nanoid = require('nanoid/generate');
 
     router.get('/likeAndomment', function(req,res){
         CommonComponent.verifyToken(req,res);
@@ -127,7 +128,15 @@ var CommonComponent = require("../../../config/CommonComponent");
                                 if (err)
                                     return  res.json({status:false,message:"getting error",error:err});
                                 else{
-                                    return  res.json({status:true,message:"Add video like successful"});
+                                    let create_like_id=nanoid('1234567890abcdefghijklmnopqrstuvwxyz', 6);
+                                    connection.query("insert into like_videos(like_video_id,video_id,user_id) values(?,?,?)",[create_like_id,video_id,user_id] ,function(err, rows,field) {
+                                        if (err)
+                                            return  res.json({status:false,message:"getting error",error:err});
+                                        else{
+                                            return  res.json({status:true,message:"Add video like successful"});
+                                        }   
+                                        
+                                    });
                                 }   
                             
                             });
