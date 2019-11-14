@@ -48,27 +48,28 @@ router.get('/chapterVideos', function(req,res){
                     connection.query("select * from like_videos where video_id in("+video_id+") and user_id = ?",[user_id], function(error,rows1, fields){
                         if(!!error)
                             return done("error in this query");
-                        if(rows1.length==0)
+                        if(rows1.length)
                         {
                             for(let j=0;i<rows.length;i++)
-                                {
-                                    rows[i].like_username = "";
-                                }
-                        }
-                        else
-                        {
+                            {
+                                    rows[j].like_username = "";
+                            }
                             for(i=0;i<rows1.length;i++)
                             {
                                 for(let j=0;i<rows.length;i++)
                                 {
-                                    if(rows[0].video_id==rows1.video_id){
-                                        rows[i].like_username = user_name;
-                                    }
-                                    else{
-                                        rows[i].like_username = "";
+                                    if(rows[j].video_id==rows1[i].video_id){
+                                        rows[j].like_username = user_name;
                                     }
                                 }
                             }
+                        }
+                        else
+                        {
+                            for(let j=0;i<rows.length;i++)
+                                {
+                                    rows[j].like_username = "";
+                                }
                         } 
                         return res.json({status:true,"message":"video list","data":rows});
                     });
