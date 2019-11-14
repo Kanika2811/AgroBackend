@@ -42,6 +42,14 @@ router.get('/userHome', function(req,res){
                         if (err)
                             return res.json({status:false,message:"getting error in teacher list",error:err});
                         if (rows.length) {
+                            for(let i=0;i<rows.length;i++)
+                            {
+                                if(rows[i].delete_flag==0){
+                                    rows[i].delete_flag=false;
+                                }else{
+                                    rows[i].delete_flag=true;
+                                }
+                            }
                             obj["teacher_list"] =rows;
                         }
                         else
@@ -53,6 +61,14 @@ router.get('/userHome', function(req,res){
                             if (err)
                                 return res.json({status:false,message:"getting error in teacher list",error:err});
                             if (rows.length) {
+                                for(let i=0;i<rows.length;i++)
+                                {
+                                    if(rows[i].delete_flag==0){
+                                        rows[i].delete_flag=false;
+                                    }else{
+                                        rows[i].delete_flag=true;
+                                    }
+                                }
                                 obj["demo_video_list"] =rows;
                             }
                             else
@@ -64,6 +80,14 @@ router.get('/userHome', function(req,res){
                                 if (err)
                                     return res.json({status:false,message:"getting error in subject list",error:err});
                                 if (rows.length) {
+                                    for(let i=0;i<rows.length;i++)
+                                    {
+                                        if(rows[i].delete_flag==0){
+                                            rows[i].delete_flag=false;
+                                        }else{
+                                            rows[i].delete_flag=true;
+                                        }
+                                    }
                                     obj["subject_list"] =rows;
                                     
                                 }
@@ -77,6 +101,14 @@ router.get('/userHome', function(req,res){
                                     if (err)
                                         return res.json({status:false,message:"getting error in subscription list",error:err});
                                     if (rows.length) {
+                                        for(let i=0;i<rows.length;i++)
+                                        {
+                                            if(rows[i].delete_flag==0){
+                                                rows[i].delete_flag=false;
+                                            }else{
+                                                rows[i].delete_flag=true;
+                                            }
+                                        }
                                         obj["subscription"] =rows;
                                         
                                     }
@@ -102,6 +134,11 @@ router.get('/userHome', function(req,res){
                                                     for(let i =0;i<rows.length;i++)
                                                     {
                                                         rows[0].user_name=user_name;
+                                                        if(rows[i].delete_flag==0){
+                                                            rows[i].delete_flag=false;
+                                                        }else{
+                                                            rows[i].delete_flag=true;
+                                                        }
                                                     }
                                                     obj["favourite_videos"] =rows;
 
