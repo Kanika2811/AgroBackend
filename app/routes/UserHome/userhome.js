@@ -25,11 +25,13 @@ router.get('/userHome', function(req,res){
     let tokens = req.headers['authorization'];
     tokens = tokens.substr(7);
     connection.query("SELECT * FROM users where token=?",[tokens] ,function(err, rows,field) {
-        let user_id = rows[0].id;
+        
         if (err)
         return  res.json({status:false,message:"getting error",error:err});
         
         if (rows.length) {
+            let user_id = rows[0].id;
+            let user_name = rows[0].name;
             connection.query("SELECT * FROM classes where class_name=?",[req.query.user_class] ,function(err, rows,field) {
                 if (err)
                     return  res.json({status:false,message:"getting error in user class",error:err});
@@ -97,7 +99,12 @@ router.get('/userHome', function(req,res){
                                                 if (err)
                                                     return res.json({status:false,message:"getting error in videos list according to favourite videos",error:err});
                                                 if (rows.length) {
+                                                    for(let i =0;i<rows.length;i++)
+                                                    {
+                                                        rows[0].user_name=user_name;
+                                                    }
                                                     obj["favourite_videos"] =rows;
+
                                                     obj["all_subscription_expiry"] ="1585699160000";
                                                 }
                                                 else{
