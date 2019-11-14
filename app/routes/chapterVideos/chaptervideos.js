@@ -22,20 +22,65 @@ router.get('/chapterVideos', function(req,res){
     if(chapter_id == '' || chapter_id === undefined){
         return res.json({status:false,message:"Please Provide chapter id",data:""});
     }
-
-
-        connection.query("select * from videos where chapter_id=?",[chapter_id], function(error,rows, fields){
-            if(!!error)
-             return done("error in this query");
-            if(rows.length==0)
-            {
-                return res.json({status:false,"message":"There is no videos in this chapter id"});
-            }
-            else
-            {
-                return res.json({status:true,"message":"video list","data":rows});
-            }
-        });
+    let tokens = req.headers['authorization'];
+    tokens = tokens.substr(7);
+    connection.query("SELECT * FROM users where token=?",[tokens] ,function(err, rows,field) {
+        if (err)
+            return  res.json({status:false,message:"getting error",error:err});
+                
+        if (rows.length) {
+            let user_name = rows[0].name;
+            let user_id = rows[0].id;
+            connection.query("select * from videos where chapter_id=?",[chapter_id], function(error,rows, fields){
+                if(!!error)
+                 return done("error in this query");
+                if(rows.length==0)
+                {
+                    return res.json({status:false,"message":"There is no videos in this chapter id"});
+                }
+                else
+                {
+                    let video_id =[];
+                    for(let i=0;i<rows.length;i++)
+                    {
+                        video_id.push("'"+rows[i].video_id+"'");
+                    }
+                    connection.query("select * from like_videos where video_id in("+video_id+") and user_id = ?",[user_id], function(error,rows1, fields){
+                        if(!!error)
+                            return done("error in this query");
+                        if(rows1.length==0)
+                        {
+                            for(let j=0;i<rows.length;i++)
+                                {
+                                    rows[i].like_username = "";
+                                }
+                        }
+                        else
+                        {
+                            for(i=0;i<rows1.length;i++)
+                            {
+                                for(let j=0;i<rows.length;i++)
+                                {
+                                    if(rows[0].video_id==rows1.video_id){
+                                        rows[i].like_username = user_name;
+                                    }
+                                    else{
+                                        rows[i].like_username = "";
+                                    }
+                                }
+                            }
+                        } 
+                        return res.json({status:true,"message":"video list","data":rows});
+                    });
+                }
+            });
+        }
+        else
+        {
+            return res.json({status:false,"message":"This user Token is not Exist.."});
+        }
+    });
+        
     });
 
     
