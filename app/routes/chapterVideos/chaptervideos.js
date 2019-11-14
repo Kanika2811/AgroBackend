@@ -50,13 +50,13 @@ router.get('/chapterVideos', function(req,res){
                             return done("error in this query");
                         if(rows1.length)
                         {
-                            for(let j=0;i<rows.length;i++)
+                            for(let j=0;j<rows.length;j++)
                             {
                                     rows[j].like_username = "";
                             }
                             for(i=0;i<rows1.length;i++)
                             {
-                                for(let j=0;i<rows.length;i++)
+                                for(let j=0;j<rows.length;j++)
                                 {
                                     if(rows[j].video_id==rows1[i].video_id){
                                         rows[j].like_username = user_name;
@@ -66,7 +66,7 @@ router.get('/chapterVideos', function(req,res){
                         }
                         else
                         {
-                            for(let j=0;i<rows.length;i++)
+                            for(let j=0;j<rows.length;j++)
                                 {
                                     rows[j].like_username = "";
                                 }
