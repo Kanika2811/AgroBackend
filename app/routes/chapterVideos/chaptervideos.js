@@ -44,6 +44,11 @@ router.get('/chapterVideos', function(req,res){
                     for(let i=0;i<rows.length;i++)
                     {
                         video_id.push("'"+rows[i].video_id+"'");
+                        if(rows[i].delete_flag==0){
+                            rows[i].delete_flag=false;
+                        }else{
+                            rows[i].delete_flag=true;
+                        }
                     }
                     connection.query("select * from like_videos where video_id in("+video_id+") and user_id = ?",[user_id], function(error,rows1, fields){
                         if(!!error)
@@ -71,7 +76,27 @@ router.get('/chapterVideos', function(req,res){
                                     rows[j].like_username = "";
                                 }
                         } 
-                        return res.json({status:true,"message":"video list","data":rows});
+                        connection.query("select * from favourite_videos where video_id in("+video_id+") and user_id = ?",[user_id], function(error,rows2, fields){
+                            if(!!error){
+                                return done("error in this query");}
+                            else{
+                                for(let j=0;j<rows.length;j++)
+                                {
+                                        rows[j].favourite_username = "";
+                                }
+                                for(i=0;i<rows2.length;i++)
+                                {
+                                    for(let j=0;j<rows.length;j++)
+                                    {
+                                        if(rows[j].video_id==rows2[i].video_id){
+                                            rows[j].favourite_username = user_name;
+                                        }
+                                    }
+                                }
+                            }
+                            return res.json({status:true,"message":"video list","data":rows});
+                        });
+                        
                     });
                 }
             });
