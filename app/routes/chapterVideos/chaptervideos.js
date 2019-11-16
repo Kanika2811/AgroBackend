@@ -57,14 +57,14 @@ router.get('/chapterVideos', function(req,res){
                         {
                             for(let j=0;j<rows.length;j++)
                             {
-                                    rows[j].like_username = false;
+                                    rows[j].isLiked = false;
                             }
                             for(i=0;i<rows1.length;i++)
                             {
                                 for(let j=0;j<rows.length;j++)
                                 {
                                     if(rows[j].video_id==rows1[i].video_id){
-                                        rows[j].like_user = true;
+                                        rows[j].isLiked = true;
                                     }
                                 }
                             }
@@ -73,7 +73,7 @@ router.get('/chapterVideos', function(req,res){
                         {
                             for(let j=0;j<rows.length;j++)
                                 {
-                                    rows[j].like_user = false;
+                                    rows[j].isLiked = false;
                                 }
                         } 
                         connection.query("select * from favourite_videos where video_id in("+video_id+") and user_id = ?",[user_id], function(error,rows2, fields){
@@ -82,14 +82,14 @@ router.get('/chapterVideos', function(req,res){
                             else{
                                 for(let j=0;j<rows.length;j++)
                                 {
-                                        rows[j].favourite_user = false;
+                                        rows[j].isFavourited = false;
                                 }
                                 for(i=0;i<rows2.length;i++)
                                 {
                                     for(let j=0;j<rows.length;j++)
                                     {
                                         if(rows[j].video_id==rows2[i].video_id){
-                                            rows[j].favourite_user = true;
+                                            rows[j].isFavourited = true;
                                         }
                                     }
                                 }

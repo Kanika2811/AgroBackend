@@ -50,7 +50,6 @@ router.post('/VerifyOTP', async (req, res) => {
                             return  res.json({status:false,message:"getting error",error:err});
                         }
                 });
-
             }
             else{
                 return res.json({"status":false,"message":"Entered Incorrect OTP"});

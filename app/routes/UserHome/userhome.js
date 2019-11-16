@@ -57,9 +57,9 @@ router.get('/userHome', function(req,res){
                             obj["teacher_list"] =[];
                         }
 
-                        connection.query("SELECT * FROM demo_videos where class_id=?",[class_id], function(err, rows,field) {
+                        connection.query("SELECT * FROM videos where isdemovideo=true", function(err, rows,field) {
                             if (err)
-                                return res.json({status:false,message:"getting error in teacher list",error:err});
+                                return res.json({status:false,message:"getting error in demo videos list",error:err});
                             if (rows.length) {
                                 for(let i=0;i<rows.length;i++)
                                 {
