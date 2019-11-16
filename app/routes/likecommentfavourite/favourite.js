@@ -33,7 +33,7 @@ const nanoid = require('nanoid/generate');
                     
             if (rows.length) {
                 let user_id = rows[0].id;
-                connection.query("SELECT * FROM favourite_videos",function(err, rows,field) {
+                connection.query("SELECT * FROM favourite_videos where video_id=? and user_id=?",[video_id,user_id],function(err, rows,field) {
                     if (err)
                         return  res.json({status:false,message:"getting error",error:err});
                     if(rows.length){
@@ -52,16 +52,7 @@ const nanoid = require('nanoid/generate');
                     }
                     else
                     {
-                        let create_fav_id=nanoid('1234567890abcdefghijklmnopqrstuvwxyz', 6);
-                        
-                        connection.query("insert into favourite_videos(favourite_video_id,video_id,user_id) values(?,?,?)",[create_fav_id,video_id,user_id] ,function(err, rows,field) {
-                            if (err)
-                                return  res.json({status:false,message:"getting error",error:err});
-                            else{
-                                return  res.json({status:true,message:"video Favourite successful"});
-                            }   
-                            
-                        });
+                        return  res.json({status:false,message:"This Video is Already marked as Favourite....."});
                     }
                 });
 
