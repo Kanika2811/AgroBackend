@@ -37,7 +37,10 @@ const nanoid = require('nanoid/generate');
                     if (err)
                         return  res.json({status:false,message:"getting error",error:err});
                     if(rows.length){
-                       
+                        return  res.json({status:false,message:"This Video is Already marked as Favourite....."});
+                    }
+                    else
+                    {
                         let create_fav_id=nanoid('1234567890abcdefghijklmnopqrstuvwxyz', 6);
                         
                         connection.query("insert into favourite_videos(favourite_video_id,video_id,user_id) values(?,?,?)",[create_fav_id,video_id,user_id] ,function(err, rows,field) {
@@ -48,11 +51,6 @@ const nanoid = require('nanoid/generate');
                             }   
                             
                         });
-
-                    }
-                    else
-                    {
-                        return  res.json({status:false,message:"This Video is Already marked as Favourite....."});
                     }
                 });
 

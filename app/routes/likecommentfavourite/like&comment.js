@@ -129,6 +129,9 @@ const nanoid = require('nanoid/generate');
                                 if (err)
                                     return  res.json({status:false,message:"getting error",error:err});
                                 if(rows1.length){
+                                    return  res.json({status:false,message:"This Video is Already marked as Like....."});
+                                }
+                                else{
                                     connection.query("update videos set video_like=? where video_id=?",[rows[0].video_like,video_id] ,function(err, rows,field) {
                                         if (err)
                                             return  res.json({status:false,message:"getting error",error:err});
@@ -145,9 +148,6 @@ const nanoid = require('nanoid/generate');
                                         }   
                                     
                                     });
-                                }
-                                else{
-                                    return  res.json({status:false,message:"This Video is Already marked as Like....."});
                                 }
                             });
                         }
