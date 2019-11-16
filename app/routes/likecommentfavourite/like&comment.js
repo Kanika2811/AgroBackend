@@ -123,22 +123,32 @@ const nanoid = require('nanoid/generate');
                         if (err)
                             return  res.json({status:false,message:"getting error",error:err});
                         if (rows.length) {
+
                             ++rows[0].video_like;
-                            connection.query("update videos set video_like=? where video_id=?",[rows[0].video_like,video_id] ,function(err, rows,field) {
+                            connection.query("SELECT * FROM like_videos where video_id=? and user_id=?",[video_id,user_id],function(err, rows1,field) {
                                 if (err)
                                     return  res.json({status:false,message:"getting error",error:err});
-                                else{
-                                    let create_like_id=nanoid('1234567890abcdefghijklmnopqrstuvwxyz', 6);
-                                    connection.query("insert into like_videos(like_video_id,video_id,user_id) values(?,?,?)",[create_like_id,video_id,user_id] ,function(err, rows,field) {
+                                if(rows1.length){
+                                    connection.query("update videos set video_like=? where video_id=?",[rows[0].video_like,video_id] ,function(err, rows,field) {
                                         if (err)
                                             return  res.json({status:false,message:"getting error",error:err});
                                         else{
-                                            return  res.json({status:true,message:"Add video like successful"});
+                                            let create_like_id=nanoid('1234567890abcdefghijklmnopqrstuvwxyz', 6);
+                                            connection.query("insert into like_videos(like_video_id,video_id,user_id) values(?,?,?)",[create_like_id,video_id,user_id] ,function(err, rows,field) {
+                                                if (err)
+                                                    return  res.json({status:false,message:"getting error",error:err});
+                                                else{
+                                                    return  res.json({status:true,message:"Add video like successful"});
+                                                }   
+                                                
+                                            });
                                         }   
-                                        
+                                    
                                     });
-                                }   
-                            
+                                }
+                                else{
+                                    return  res.json({status:false,message:"This Video is Already marked as Like....."});
+                                }
                             });
                         }
                         else{
