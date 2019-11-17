@@ -43,6 +43,17 @@ router.post('/VerifyOTP', async (req, res) => {
                                 else{
                                     rows[0].delete_flag=true;
                                 }
+                                if(rows[0].is_verified==0)
+                                    rows[0].is_verified=false;
+                                    else
+                                    rows[0].is_verified=true;
+
+                                    if(rows[0].is_video_purchased==0)
+                                    rows[0].is_video_purchased=false;
+                                    else
+                                    rows[0].is_video_purchased=true;
+
+                                    rows[0].dob=rows[0].dob.toLocaleString().slice(0,10).replace('/','-').replace('/','-');
                                 return res.json({status:true,message:"User verified successfully!!!","data":rows[0]});
                             });
                         }
