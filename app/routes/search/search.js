@@ -28,6 +28,7 @@ router.get('/search',function(req,res){
         if (err)
             return  res.json({status:false,message:"getting error",error:err});
         if (rows.length) {
+            let user_id=rows[0].id;
             connection.query("SELECT * FROM videos where video_name LIKE '%"+search_video+"%'" ,function(err, rows,field) {
                 if (err)
                     return  res.json({status:false,message:"getting error",error:err});
