@@ -14,7 +14,7 @@ router.get('/assessment',function(req,res){
     CommonComponent.verifyToken(req,res);
     let assess = {
         video_id
-    } = req.body;
+    } = req.query;
     if (!(typeof video_id === 'string')) {
         return res.json({"status":false,"message":"Invalid data provided"});
     }
