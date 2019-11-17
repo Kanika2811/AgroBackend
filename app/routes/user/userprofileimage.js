@@ -1,42 +1,53 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../uploadFile/uploadfile');
 var mysql = require('mysql');
 var dbconfig = require('../../../config/database');
 var connection = mysql.createConnection(dbconfig.connection);
 connection.query('USE ' + dbconfig.database);
 var CommonComponent = require("../../../config/CommonComponent");
+const aws = require('aws-sdk')
+const multer = require('multer')
+const multerS3 = require('multer-s3')
 
+var Constants = require('../../../config/ConstantKeys')
+
+aws.config.update({
+    secretAccessKey:Constants.AWS_secretAccessKey,
+    accessKeyId:Constants.AWS_accessKeyId,
+    region:'ap-south-1'
+});
+
+const s3 = new aws.S3();
  
-const singleUpload = upload.single('image');
+const uploadFile = (fileName) => {
+   const fileContent = fs.readFileSync(fileName);
+    const params = {
+        Bucket: 'mrb-data',
+        Key: 'profile_2.png', 
+       Body: fileContent
+    };
+    s3.upload(params, function(err, data) {
+        if (err) {
+            throw err;
+        }
+        console.log(`File uploaded successfully. ${data.Location}`);
+    });
+};
 
 router.post('/userProfileImage', function(req,res){
+    CommonComponent.verifyToken(req,res);
+    let assess = {
+        profile_image_url
+    } = req.body;
+    if (!(typeof profile_image_url === 'string')) {
+        return res.json({"status":false,"message":"Invalid data provided"});
+    }
 
-   singleUpload(req,res,function(err){
-      return res.json({'imageUrl': req.file.location})
-    });
+    if(profile_image_url == '' || profile_image_url === undefined){
+        return res.json({status:false,message:"Please Provide user profile image",data:""});
+    }
+   uploadFile(profile_image_url);
     
 })
-
-//router.post('/teacher',function(req,res){
-    //CommonComponent.verifyToken(req,res)
-    
-
-//})
-
-/*router.get('/teacher',function(req,res){
-    CommonComponent.verifyToken(req,res)
-    connection.query("SELECT * FROM teachers", function(err, rows) {
-        if (err)
-            return done(err);
-        if (rows.length) {
-            return res.json({status:true,message:"Get Teachers List successfully!!!",data:rows});
-        }
-        else {
-            return res.json({status:false,message:"Data is empty"});
-        }
-    });
-    
-})*/
 
 module.exports = router;

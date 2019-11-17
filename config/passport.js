@@ -102,6 +102,20 @@ module.exports = function(passport) {
                 if(rows[0].is_verified === 0){
                     return done("User not verified", false, req.flash('loginMessage', 'Oops! Wrong password.'));
                  }
+                 if(rows[0].is_verified==0)
+                 rows[0].is_verified=false;
+                 else
+                 rows[0].is_verified=true;
+
+                 if(rows[0].is_video_purchased==0)
+                 rows[0].is_video_purchased=false;
+                 else
+                 rows[0].is_video_purchased=true;
+
+                 if(rows[0].delete_flag==0)
+                 rows[0].delete_flag=false;
+                 else
+                 rows[0].delete_flag=true;
                  
                  rows[0].dob=rows[0].dob.toLocaleString().slice(0,10).replace('/','-').replace('/','-');
                 return done(null, rows[0]);
