@@ -22,6 +22,7 @@ const chaptervideos=require('./app/routes/chapterVideos/chaptervideos.js');
 const like_comment=require('./app/routes/likecommentfavourite/like&comment.js');
 const favourite=require('./app/routes/likecommentfavourite/favourite.js');
 const assessment=require('./app/routes/assessment/assessment.js');
+const search=require('./app/routes/search/search.js');
 
 
 var passport = require('passport');
@@ -63,6 +64,7 @@ app.use(apiVersion,chaptervideos);
 app.use(apiVersion,like_comment);
 app.use(apiVersion,favourite);
 app.use(apiVersion,assessment);
+app.use(apiVersion,search);
 
 
 
