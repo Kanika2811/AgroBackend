@@ -50,7 +50,7 @@ router.get('/assessment',function(req,res){
                             obj1["option_"+j]=rows[i]["option_"+j];
                         }
                         home_dat1.push(obj1);
-                        obj["options"]=obj1;
+                        obj["options"]=home_dat1;
                         obj["correct_answer"] =rows[i].correct_answer;
                         obj["created_timestamp"] =rows[i].created_timestamp;
                         obj["updated_timestamp"] =rows[i].updated_timestamp;
@@ -59,8 +59,8 @@ router.get('/assessment',function(req,res){
                         else
                         obj["delete_flag"] =false;
                     }
-                    Home_data.push(obj);
-                    return  res.json({status:true,message:"Get successfully assessment...",data:Home_data});
+                    
+                    return  res.json({status:true,message:"Get successfully assessment...",data:[obj]});
                 }
                 else{
                     return  res.json({status:false,message:"This video dont have assessment.."});
