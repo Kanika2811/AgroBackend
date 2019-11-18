@@ -40,11 +40,12 @@ router.get('/assessment',function(req,res){
                     for(i=0;i<rows.length;i++)
                     {
                         let home_dat1=[];
-                        let obj1={};
+                        
                         for(let j=1;j<=rows[i].total_option;j++)
                         {
-                            let demotext = "option_"+j;
-                            home_dat1.push({demotext:rows[i][demotext]});
+                            let obj1={};
+                           obj1["option_"+j]=rows[i]["option_"+j]
+                           home_dat1.push(obj1)
                         }
                         
                         if(rows[i].delete_flag==1)
