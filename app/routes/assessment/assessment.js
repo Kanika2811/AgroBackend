@@ -33,14 +33,32 @@ router.get('/assessment',function(req,res){
                     return  res.json({status:false,message:"getting error",error:err});
                 if(rows.length)
                 {
+                    
+                    let obj ={};
+                    let Home_data =[];
+                    let obj1={};
                     for(let i=0;i<rows.length;i++)
                     {
+                        obj["assessment_id"] =rows[i].assessment_id;
+                        obj["video_id"] =rows[i].video_id;
+                        obj["question"] =rows[i].question;
+                        obj["total_option"] =rows[i].total_option;
+                        
+                        for(let j=1;j<=rows[i].total_option;j++)
+                        {
+                            obj1["option_"+j]=rows[i].option_+i;
+                        }
+                        obj.push(obj1);
+                        obj["correct_answer"] =rows[i].correct_answer;
+                        obj["created_timestamp"] =rows[i].created_timestamp;
+                        obj["updated_timestamp"] =rows[i].updated_timestamp;
                         if(rows[i].delete_flag==1)
-                        rows[i].delete_flag=true;
+                        obj["delete_flag"] =true;
                         else
-                        rows[i].delete_flag=false;
+                        obj["delete_flag"] =false;
                     }
-                    return  res.json({status:true,message:"Get successfully assessment...",data:rows});
+                    Home_data.push(obj);
+                    return  res.json({status:true,message:"Get successfully assessment...",data:Home_data});
                 }
                 else{
                     return  res.json({status:false,message:"This video dont have assessment.."});
@@ -56,20 +74,40 @@ router.get('/assessment',function(req,res){
 router.post('/assessment',function(req,res){
     CommonComponent.verifyToken(req,res);
     let assess = {
-        assessment_id,
-        user_answer
+        video_id,
+        result
     } = req.body;
-    if (!(typeof assessment_id === 'string'||
-    typeof user_answer === 'string')) {
+    if (!(typeof video_id === 'string'||
+    typeof result === 'string')) {
         return res.json({"status":false,"message":"Invalid data provided"});
     }
 
-    if(assessment_id == '' || assessment_id === undefined){
-        return res.json({status:false,message:"Please Provide Assessment id",data:""});
+    if(video_id == '' || video_id === undefined){
+        return res.json({status:false,message:"Please Provide Video id",data:""});
     }
 
-    if(user_answer == '' || user_answer === undefined){
-        return res.json({status:false,message:"Please Provide User Answer",data:""});
+    if(result == '' || result === undefined){
+        return res.json({status:false,message:"Please Provide Result",data:""});
     }
+    let tokens = req.headers['authorization'];
+    tokens = tokens.substr(7);
+    connection.query("SELECT * FROM users where token=?",[tokens] ,function(err, rows,field) {
+        if (err)
+            return  res.json({status:false,message:"getting error",error:err});
+        if (rows.length) {
+            let user_id = rows[0].id;
+            connection.query("insert into user_result(video_id,result,user_id) values(?,?,?)",[video_id,result,user_id] ,function(err, rows,field) {
+                if (err)
+                    return  res.json({status:false,message:"getting error",error:err});
+                else{
+                    return  res.json({status:true,message:"User Result store successfully....."});
+                }   
+                
+            });
+        }
+        else{
+
+        }
+    });
 });
 module.exports = router;
