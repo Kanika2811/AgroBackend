@@ -28,7 +28,7 @@ router.get('/assessment',function(req,res){
         if (err)
             return  res.json({status:false,message:"getting error",error:err});
         if (rows.length) {
-            connection.query("SELECT assessment_id,video_id,question,option_1,option_2,option_3,option_4,option_5,correct_answer,created_timestamp,updated_timestamp,delete_flag FROM assessment where video_id=?",[video_id],function(err, rows,field) {
+            connection.query("SELECT assessment_id,video_id,question,option_1,option_2,option_3,option_4,option_5,correct_answer,total_option,created_timestamp,updated_timestamp,delete_flag FROM assessment where video_id=?",[video_id],function(err, rows,field) {
                 if (err)
                     return  res.json({status:false,message:"getting error",error:err});
                 if(rows.length)
@@ -53,5 +53,23 @@ router.get('/assessment',function(req,res){
     });
 
 });
+router.post('/assessment',function(req,res){
+    CommonComponent.verifyToken(req,res);
+    let assess = {
+        assessment_id,
+        user_answer
+    } = req.body;
+    if (!(typeof assessment_id === 'string'||
+    typeof user_answer === 'string')) {
+        return res.json({"status":false,"message":"Invalid data provided"});
+    }
 
+    if(assessment_id == '' || assessment_id === undefined){
+        return res.json({status:false,message:"Please Provide Assessment id",data:""});
+    }
+
+    if(user_answer == '' || user_answer === undefined){
+        return res.json({status:false,message:"Please Provide User Answer",data:""});
+    }
+});
 module.exports = router;
