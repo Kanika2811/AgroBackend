@@ -36,7 +36,7 @@ router.get('/assessment',function(req,res){
                     
                     let obj ={};
                     let Home_data =[];
-                    
+                    let i;
                     for(let i=0;i<rows.length;i++)
                     {
                         obj["assessment_id"] =rows[i].assessment_id;
@@ -58,13 +58,13 @@ router.get('/assessment',function(req,res){
                         obj["delete_flag"] =true;
                         else
                         obj["delete_flag"] =false;
-                        if(i==rows.length)
+                        
+                    }
+                    if(i==rows.length)
                         {
                             Home_data.push(obj);
                             return  res.json({status:true,message:"Get successfully assessment...",data:Home_data});
                         }
-                    }
-                    
                     
                 }
                 else{
