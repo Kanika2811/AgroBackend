@@ -37,7 +37,7 @@ router.get('/assessment',function(req,res){
                     let obj ={};
                     let Home_data =[];
                     let i;
-                    for(let i=0;i<rows.length;i++)
+                    for(i=0;i<rows.length;i++)
                     {
                         obj["assessment_id"] =rows[i].assessment_id;
                         obj["video_id"] =rows[i].video_id;
@@ -61,9 +61,10 @@ router.get('/assessment',function(req,res){
                         
                     }
                     if(i==rows.length)
-                        {
+                    {
+                        console.log("i am here");
                             Home_data.push(obj);
-                            return  res.json({status:true,message:"Get successfully assessment...",data:Home_data});
+                            return  res.json({status:true,message:"Get successfully assessment...",data:[obj]});
                         }
                     
                 }
