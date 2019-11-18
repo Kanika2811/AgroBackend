@@ -47,9 +47,9 @@ router.get('/assessment',function(req,res){
                         let obj1={};
                         for(let j=1;j<=rows[i].total_option;j++)
                         {
-                            Home_data["option_"+j]=rows[i]["option_"+j];
+                            home_dat1["option_"+j]=rows[i]["option_"+j];
                         }
-                        home_dat1.push(obj1);
+                       
                         obj["options"]=home_dat1;
                         obj["correct_answer"] =rows[i].correct_answer;
                         obj["created_timestamp"] =rows[i].created_timestamp;
@@ -62,7 +62,7 @@ router.get('/assessment',function(req,res){
                     }
                     if(i==rows.length)
                     {
-                        console.log("i am here");
+                        console.log(obj);
                             Home_data.push(obj);
                             return  res.json({status:true,message:"Get successfully assessment...",data:[obj]});
                         }
