@@ -47,7 +47,7 @@ router.get('/assessment',function(req,res){
                         let obj1={};
                         for(let j=1;j<=rows[i].total_option;j++)
                         {
-                            home_dat1[j-1]["option_"+j]=rows[i]["option_"+j];
+                            home_dat1({ "option_1" : rows[i]["option_"+j]});
                         }
                        
                         obj["options"]=home_dat1;
