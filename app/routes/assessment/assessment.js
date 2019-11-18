@@ -60,8 +60,8 @@ router.get('/assessment',function(req,res){
                         else
                         obj["delete_flag"] =false;
 
-                        Home_data.push(obj);
-                        console.log(obj);
+                        Home_data[Home_data.length].push(obj);
+                        console.log(Home_data.length);
                     }
                     if(i==rows.length)
                     {
