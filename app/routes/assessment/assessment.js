@@ -36,19 +36,21 @@ router.get('/assessment',function(req,res){
                     
                     let obj ={};
                     let Home_data =[];
-                    let obj1={};
+                    
                     for(let i=0;i<rows.length;i++)
                     {
                         obj["assessment_id"] =rows[i].assessment_id;
                         obj["video_id"] =rows[i].video_id;
                         obj["question"] =rows[i].question;
                         obj["total_option"] =rows[i].total_option;
-                        
+                        let home_dat1=[];
+                        let obj1={};
                         for(let j=1;j<=rows[i].total_option;j++)
                         {
                             obj1["option_"+j]=rows[i].option_+i;
                         }
-                        obj.push(obj1);
+                        home_dat1.push(obj1);
+                        obj["options"]=obj1;
                         obj["correct_answer"] =rows[i].correct_answer;
                         obj["created_timestamp"] =rows[i].created_timestamp;
                         obj["updated_timestamp"] =rows[i].updated_timestamp;
