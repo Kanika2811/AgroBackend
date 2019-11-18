@@ -59,11 +59,12 @@ router.get('/assessment',function(req,res){
                         obj["delete_flag"] =true;
                         else
                         obj["delete_flag"] =false;
-                        console.log(obj);
-                        Home_data.push(obj);
+                        Home_data[Home_data.length]=obj;
+                        
                     }
                     if(i==rows.length)
                     {
+                        
                             return  res.json({status:true,message:"Get successfully assessment...",data:Home_data});
                         }
                     
