@@ -39,10 +39,6 @@ router.get('/assessment',function(req,res){
                     let i;
                     for(i=0;i<rows.length;i++)
                     {
-                        obj["assessment_id"] =rows[i].assessment_id;
-                        obj["video_id"] =rows[i].video_id;
-                        obj["question"] =rows[i].question;
-                        obj["total_option"] =rows[i].total_option;
                         let home_dat1=[];
                         let obj1={};
                         for(let j=1;j<=rows[i].total_option;j++)
@@ -51,16 +47,17 @@ router.get('/assessment',function(req,res){
                             obj1["option_"+j]=rows[i]["option_"+j];
                         }
                         home_dat1.push(obj1);
-                        obj["options"]=home_dat1;
-                        obj["correct_answer"] =rows[i].correct_answer;
-                        obj["created_timestamp"] =rows[i].created_timestamp;
-                        obj["updated_timestamp"] =rows[i].updated_timestamp;
                         if(rows[i].delete_flag==1)
-                        obj["delete_flag"] =true;
+                        rows[i].delete_flag =true;
                         else
-                        obj["delete_flag"] =false;
+                        rows[i].delete_flag =false;
 
                         Home_data[Home_data.length]=obj;
+                        Home_data.push({"assessment_id":rows[i].assessment_id,"video_id":rows[i].video_id,"question":rows[i].question,
+                        "total_option":rows[i].total_option,"options":home_dat1,
+                        "correct_answer":rows[i].correct_answer,"created_timestamp":rows[i].created_timestamp,"updated_timestamp":rows[i].updated_timestamp,
+                        "delete_flag":rows[i].delete_flag
+                    })
                         console.log(Home_data);
                     }
                     if(i==rows.length)
