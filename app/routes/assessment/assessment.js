@@ -48,9 +48,9 @@ router.get('/assessment',function(req,res){
                         for(let j=1;j<=rows[i].total_option;j++)
                         {
 
-                            home_dat1.push( "option_1"=rows[i]["option_"+j]);
+                            onj1["option_"+j]=rows[i]["option_"+j];
                         }
-                       
+                        home_dat1.push(obj1);
                         obj["options"]=home_dat1;
                         obj["correct_answer"] =rows[i].correct_answer;
                         obj["created_timestamp"] =rows[i].created_timestamp;
