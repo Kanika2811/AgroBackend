@@ -47,7 +47,7 @@ router.get('/assessment',function(req,res){
                         let obj1={};
                         for(let j=1;j<=rows[i].total_option;j++)
                         {
-                            home_dat1({ "option_1" : rows[i]["option_"+j]});
+                            home_dat1.push({"option_1" : rows[i]["option_"+j]});
                         }
                        
                         obj["options"]=home_dat1;
@@ -58,6 +58,7 @@ router.get('/assessment',function(req,res){
                         obj["delete_flag"] =true;
                         else
                         obj["delete_flag"] =false;
+
                         Home_data.push(obj);
                     }
                     if(i==rows.length)
