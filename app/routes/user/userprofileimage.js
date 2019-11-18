@@ -56,5 +56,12 @@ const encryptor = require('file-encryptor');
 const key = 'Kj4S2pMLH~jrean}$PCbyh-Zf!;Ln:+U';
 var options = { algorithm: 'aes256' };
 
-
+  router.post('/testsncy', function(req,res){
+    encryptor.encryptFile('1 Quadratic Equations Introduction.mp4', 'encrypted.dat', key, function(err) {
+        // Encryption complete.
+      });
+      encryptor.decryptFile('encrypted.dat', 'outputfile.mp4', key, function(err) {
+        // Decryption complete.
+      });
+  });
 module.exports = router;

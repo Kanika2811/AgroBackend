@@ -44,7 +44,7 @@ router.get('/assessment',function(req,res){
                         for(let j=1;j<=rows[i].total_option;j++)
                         {
                             let obj1={};
-                           obj1["option_"+j]=rows[i]["option_"+j]
+                           obj1["option"]=rows[i]["option_"+j]
                            home_dat1.push(obj1)
                         }
                         
@@ -56,7 +56,7 @@ router.get('/assessment',function(req,res){
                         
                         Home_data.push({"assessment_id":rows[i].assessment_id,"video_id":rows[i].video_id,"question":rows[i].question,
                         "total_option":rows[i].total_option,"options":home_dat1,
-                        "correct_answer":rows[i].correct_answer,"created_timestamp":rows[i].created_timestamp,"updated_timestamp":rows[i].updated_timestamp,
+                        "correct_answer":rows[i][rows[i].correct_answer],"created_timestamp":rows[i].created_timestamp,"updated_timestamp":rows[i].updated_timestamp,
                         "delete_flag":rows[i].delete_flag
                     })
                         
