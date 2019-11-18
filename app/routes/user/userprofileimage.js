@@ -9,6 +9,8 @@ const aws = require('aws-sdk')
 const multer = require('multer')
 const multerS3 = require('multer-s3')
 
+
+
 var Constants = require('../../../config/ConstantKeys')
 
 aws.config.update({
@@ -49,5 +51,10 @@ router.post('/userProfileImage', function(req,res){
    uploadFile(profile_image_url);
     
 })
+const encryptor = require('file-encryptor');
+     
+const key = 'Kj4S2pMLH~jrean}$PCbyh-Zf!;Ln:+U';
+var options = { algorithm: 'aes256' };
+
 
 module.exports = router;
