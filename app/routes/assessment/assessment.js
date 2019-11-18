@@ -61,10 +61,11 @@ router.get('/assessment',function(req,res){
                         if(i==rows.length)
                         {
                             Home_data.push(obj);
+                            return  res.json({status:true,message:"Get successfully assessment...",data:Home_data});
                         }
                     }
                     
-                    return  res.json({status:true,message:"Get successfully assessment...",data:Home_data});
+                    
                 }
                 else{
                     return  res.json({status:false,message:"This video dont have assessment.."});
