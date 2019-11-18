@@ -52,13 +52,13 @@ router.get('/assessment',function(req,res){
                         else
                         rows[i].delete_flag =false;
 
-                        Home_data[Home_data.length]=obj;
+                        
                         Home_data.push({"assessment_id":rows[i].assessment_id,"video_id":rows[i].video_id,"question":rows[i].question,
                         "total_option":rows[i].total_option,"options":home_dat1,
                         "correct_answer":rows[i].correct_answer,"created_timestamp":rows[i].created_timestamp,"updated_timestamp":rows[i].updated_timestamp,
                         "delete_flag":rows[i].delete_flag
                     })
-                        console.log(Home_data);
+                        
                     }
                     if(i==rows.length)
                     {
