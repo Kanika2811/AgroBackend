@@ -8,7 +8,7 @@ var CommonComponent = require("../../../config/CommonComponent");
 const aws = require('aws-sdk')
 const multer = require('multer')
 const multerS3 = require('multer-s3')
-
+const path = require("path");
 
 
 var Constants = require('../../../config/ConstantKeys')
@@ -52,16 +52,26 @@ router.post('/userProfileImage', function(req,res){
     
 })
 const encryptor = require('file-encryptor');
-     
-const key = 'Kj4S2pMLH~jrean}$PCbyh-Zf!;Ln:+U';
-var options = { algorithm: 'aes256' };
+
+
+const key = 'Kj4S2pML';
+let options = { algorithm: 'des' };
 
   router.post('/testsncy', function(req,res){
-    encryptor.encryptFile('1 Quadratic Equations Introduction.mp4', 'encrypted.dat', key, function(err) {
+    let file = path.join(__dirname, `1 Quadratic Equations Introduction.mp4`)
+    console.log(file);
+    encryptor.encryptFile(file, 'Quadratic.mp4', key, options,function(err) {
         // Encryption complete.
       });
-      encryptor.decryptFile('encrypted.dat', 'outputfile.mp4', key, function(err) {
+     
+  });
+
+  router.post('/testsncy1', function(req,res){
+    let file = path.join(__dirname, `../../../Quadratic.mp4`)
+    console.log(file);
+   
+      encryptor.decryptFile(file, 'outputfile.mp4', key,options, function(err) {
         // Decryption complete.
-      });
+     });
   });
 module.exports = router;

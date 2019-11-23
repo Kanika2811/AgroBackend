@@ -1,13 +1,13 @@
 {
-  "name": "agro-backend",
-  "main": "server.js",
-  "scripts": {
-    "start": "node ./server"
-  },
-  "dependencies": {
-    "api": "git@github.com:GauravRohit/ApiModule.git"
-  },
-  "devDependencies": {
-    "nodemon": "^1.19.3"
+    "name": "agro-backend",
+    "main": "server.js",
+    "scripts": {
+      "start": "node ./server"
+    },
+    "dependencies": {
+      "api": "git@github.com:GauravRohit/ApiModule.git"
+    },
+    "devDependencies": {
+      "nodemon": "^1.19.3"
+    }
   }
-}
