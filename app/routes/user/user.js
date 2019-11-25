@@ -45,6 +45,31 @@ module.exports = function(app, passport) {
 
 	// process the login form
 	app.post('/api/v1/login',function(req,res,next){
+		let signup = {
+			contact_no,
+			password,
+			uuid,
+			fcm
+			} = req.body;
+		if (!(typeof contact_no === 'string' ||
+		typeof password === 'string' ||
+		typeof uuid === 'string' ||
+		typeof fcm === 'string')) {
+			return res.json({"status":false,"message":"Invalid data provided"});
+		}
+		if(contact_no == '' || contact_no === undefined){
+			return res.json({status:false,message:"Please Enter Your Contact No."});
+		}
+		if(password == '' || password === undefined){
+			return res.json({status:false,message:"Please Enter Your Password"});
+		}
+		if(uuid == '' || uuid === undefined){
+			return res.json({status:false,message:"Please Enter Your Device uuid"});
+		}
+		if(fcm == '' || fcm === undefined){
+			return res.json({status:false,message:"Please Enter Your fcm"});
+		}
+
 		passport.authenticate('local-login', function(err,user,req) {
 		if (err) {
 			return res.json({"status":false,"message":err});
@@ -67,7 +92,9 @@ module.exports = function(app, passport) {
 			contact_no,
 			user_class,
 			user_city,
-			user_state
+			user_state,
+			uuid,
+			fcm
 			} = req.body;
 		if (!(typeof name === 'string' ||
 		typeof gender === 'string' ||
@@ -77,7 +104,10 @@ module.exports = function(app, passport) {
 		typeof contact_no === 'string' ||
 		typeof user_class === 'string' ||
 		typeof user_city === 'string' ||
-		typeof user_state === 'string' )) {
+		typeof user_state === 'string' ||
+		typeof uuid === 'string' ||
+		typeof fcm === 'string' ||
+		typeof apply_referral === 'string')) {
 			return res.json({"status":false,"message":"Invalid data provided"});
 		}
 		if(name == '' || name === undefined){
@@ -109,6 +139,13 @@ module.exports = function(app, passport) {
 		}
 		if(user_city == '' || user_city === undefined){
 			return res.json({status:false,message:"Please Select Your State"});
+		}
+		if(uuid == '' || uuid === undefined){
+			return res.json({status:false,message:"Please Provide uuid for device"});
+		}
+
+		if(fcm == '' || fcm === undefined){
+			return res.json({status:false,message:"Please provide fcm"});
 		}
 
 		passport.authenticate('local-signup', function(err,user,req) {
