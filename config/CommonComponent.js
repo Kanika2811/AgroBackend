@@ -38,8 +38,8 @@ module.exports = {
 
     profileUpload : function(req,res)
     {
-        let file = path.join( req.body.imageUrl);
-        const fileContent = fs.readFileSync(file);
+        let file = path.extname( req.body.imageUrl);
+        const fileContent = fs.readFileSync( req.body.imageUrl);
         const secondsSinceEpoch = Math.round(new Date(dt.now())/ 1000)  
             const params = {
                 Bucket: 'mrb-data/profile_image',
