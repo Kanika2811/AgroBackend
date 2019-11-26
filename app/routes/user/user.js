@@ -94,7 +94,8 @@ module.exports = function(app, passport) {
 			user_city,
 			user_state,
 			uuid,
-			fcm
+			fcm,
+			apply_referral
 			} = req.body;
 		if (!(typeof name === 'string' ||
 		typeof gender === 'string' ||
