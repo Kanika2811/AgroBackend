@@ -137,7 +137,7 @@ module.exports = function(passport) {
                                     rows[0].delete_flag=true;
                                     
                                     rows[0].dob=rows[0].dob.toLocaleString().slice(0,10).replace('/','-').replace('/','-');
-                                    return done("User login into new device",true,req.flash('loginMessage','User login into new device'), rows[0]);
+                                    return done(null, rows[0]);
                                 }
                             });
                             
