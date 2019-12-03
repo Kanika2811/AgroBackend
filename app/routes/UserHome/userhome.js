@@ -186,7 +186,7 @@ router.get('/userHome', function(req,res){
                                                     }
                                                     obj["favourite_videos"] =rows;
 
-                                                    obj["all_subscription_expiry"] ="1585699160000";
+                                                    obj["app_expiry"] ="1585699160000";
                                                 }
                                                 else{
                                                     obj["favourite_videos"] =[];
