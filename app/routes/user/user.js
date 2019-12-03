@@ -218,7 +218,7 @@ module.exports = function(app, passport) {
 				sendOtp.send(contact_no, Constants.OTP_SENDER_ID,otp, function (error, data) {
 					if(!err){
 	
-						let sql ='UPDATE  users SET otp = ?, updated_timestamp=? WHERE contact_no = ?';
+						let sql ='UPDATE  users SET otp = ?, is_verified=0, updated_timestamp=? WHERE contact_no = ?';
 						connection.query(sql,[otp,new Date(dt.now()),contact_no], function(err, rows,fields) {
 							if(!err){
 								
@@ -226,6 +226,7 @@ module.exports = function(app, passport) {
 								
 								obj["contact_no"] =  contact_no;
 								obj["otp"] = otp;
+								obj["expiry_time"] = "120 seconds";
 								
 								
 								return res.json({status:true,message:"Forgot Password OTP RESEND SUCCESSFULLY!!!",data:obj});

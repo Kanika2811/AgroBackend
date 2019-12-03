@@ -32,7 +32,9 @@ router.post('/VerifyOTP', async (req, res) => {
             return  res.json({status:false,message:"getting error",error:err});
       
        if(rows.length){
-            if(otp == rows[0].otp){
+           if(rows[0].is_verified==0)
+           {
+                if(otp == rows[0].otp){
                     let sql ='UPDATE  users SET is_verified = ?,updated_timestamp=? WHERE contact_no = ?';
                     connection.query(sql,["1",new Date(dt.now()),contact_no], function(err, rows,fields) {
                         if(!err){
@@ -60,11 +62,16 @@ router.post('/VerifyOTP', async (req, res) => {
                         else{
                             return  res.json({status:false,message:"getting error",error:err});
                         }
-                });
-            }
-            else{
-                return res.json({"status":false,"message":"Entered Incorrect OTP"});
-            }
+                    });
+                }
+                else{
+                    return res.json({"status":false,"message":"Entered Incorrect OTP"});
+                }
+           }
+           else{
+            return res.json({"status":false,"message":"This user is already verified!!.."});
+           }
+            
         }
         else{
             return res.json({status:false,message:"This user is not exist."});

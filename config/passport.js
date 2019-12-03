@@ -71,6 +71,7 @@ module.exports = function(passport) {
                                     
                                     obj["contact_no"] =  rows[0].contact_no;
                                     obj["otp"] = rows[0].otp;
+                                    obj["expiry_time"] = "120 seconds";
                                     
                                     return done(null, obj);
                                 });
@@ -147,8 +148,8 @@ module.exports = function(passport) {
                 contact_no: username,
                 password: bcrypt.hashSync(req.body.new_password, bcrypt.genSaltSync(10))  // use the generateHash function in our user model
             };
-            var insertQuery = 'UPDATE users SET password = ?, is_verified = ?, updated_timestamp = ? WHERE contact_no=?';
-            connection.query(insertQuery,[newUserMysql.password,req.body.is_otp_verified,new Date(dt.now()),newUserMysql.contact_no],function(err, rows) {
+            var insertQuery = 'UPDATE users SET password = ?, is_verified = 1, updated_timestamp = ? WHERE contact_no=?';
+            connection.query(insertQuery,[newUserMysql.password,new Date(dt.now()),newUserMysql.contact_no],function(err, rows) {
                 if(err) {
                     return done(err); 
                 }

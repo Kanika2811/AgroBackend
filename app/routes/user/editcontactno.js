@@ -40,7 +40,7 @@ router.put('/editContactNo', async (req, res) => {
                         else{
                             rows[0].delete_flag=true;
                         }
-                    return res.json({status:true,message:"Updated Contact Number Successfully!!!",data:rows[0]});
+                    return res.json({status:true,message:"Updated Contact Number Successfully!!!"});
                     });
                 }
             });

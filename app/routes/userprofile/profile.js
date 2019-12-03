@@ -8,6 +8,9 @@ var CommonComponent = require("../../../config/CommonComponent");
 var dateTime = require('node-datetime');
 var dt = dateTime.create();
 dt.format('Y-m-d H:M:S');
+const path = require("path");
+const bodyParser = require("body-parser");
+const multer = require("multer");
 
 router.post('/profile',function(req,res){
     CommonComponent.verifyToken(req,res);
@@ -130,5 +133,9 @@ router.put('/profile',function(req,res){
         }
     });
 });
+router.post('/profile1',function(req,res){
+    const file=  req.body;
+console.log(file);
 
+});
 module.exports = router;

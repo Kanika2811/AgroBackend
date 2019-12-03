@@ -37,6 +37,7 @@ router.post('/resendOTP', async (req, res) => {
                             
                             obj["contact_no"] =  contact_no;
                             obj["otp"] = otp;
+                            obj["expiry_time"] = "120 seconds";
                            
                             
                             return res.json({status:true,message:"OTP RESEND SUCCESSFULLY!!!",data:obj});
