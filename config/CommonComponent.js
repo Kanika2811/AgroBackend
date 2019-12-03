@@ -33,7 +33,7 @@ module.exports = {
             //next();
         }else{
             //res.json({"status":false,"Message":"User Unauthorized"});
-            res.status(401).send({message : 'User Unauthorized'})
+            res.status(401).send({status:401,message : 'User Unauthorized'})
         }
     },
 
