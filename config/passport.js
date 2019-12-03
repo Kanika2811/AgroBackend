@@ -110,8 +110,40 @@ module.exports = function(passport) {
                  }
                  if(!(req.body.uuid==rows[0].uuid && req.body.fcm==rows[0].fcm))
                  {
-                     console.log("check")
-                    return done("Already loged In on other device", false, req.flash('loginMessage', 'Oops! Wrong password.'));
+                    var insertQuery = 'UPDATE users SET uuid = ?, fcm = ?, updated_timestamp = ? WHERE contact_no=?';
+                    connection.query(insertQuery,[req.body.uuid,req.body.fcm,Math.round(new Date().getTime() / 1000),username],function(err, rows) {
+                        if(err) {
+                            return done(err); 
+                        }
+                        else{
+                            connection.query("SELECT * FROM users WHERE contact_no = ? ",[username], function(err, rows){
+                                if (err)
+                                    return done(err);
+                                else
+                                {
+                                    if(rows[0].is_verified==0)
+                                    rows[0].is_verified=false;
+                                    else
+                                    rows[0].is_verified=true;
+
+                                    if(rows[0].is_video_purchased==0)
+                                    rows[0].is_video_purchased=false;
+                                    else
+                                    rows[0].is_video_purchased=true;
+
+                                    if(rows[0].delete_flag==0)
+                                    rows[0].delete_flag=false;
+                                    else
+                                    rows[0].delete_flag=true;
+                                    
+                                    rows[0].dob=rows[0].dob.toLocaleString().slice(0,10).replace('/','-').replace('/','-');
+                                    return done("User login into new device",true,req.flash('loginMessage','User login into new device'), rows[0]);
+                                }
+                            });
+                            
+                        }
+                    });
+                    
                  }
 
                  if(rows[0].is_verified==0)
