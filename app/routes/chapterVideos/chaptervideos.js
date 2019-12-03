@@ -103,7 +103,7 @@ router.get('/chapterVideos', function(req,res){
         }
         else
         {
-            return res.json({status:false,"message":"This user Token is not Exist.."});
+            return  res.status(401).send({status:401,message : 'User Unauthorized'})
         }
     });
         

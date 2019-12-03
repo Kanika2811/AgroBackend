@@ -72,7 +72,7 @@ const nanoid = require('nanoid/generate');
                 
             }
             else{
-                return  res.json({status:false,message:"This user Token is not Exist.."});
+                return  res.status(401).send({status:401,message : 'User Unauthorized'})
             }
         });
     })
@@ -159,7 +159,7 @@ const nanoid = require('nanoid/generate');
                 
             }
             else{
-                return  res.json({status:false,message:"This user Token is not Exist.."});
+                return  res.status(401).send({status:401,message : 'User Unauthorized'})
             }
         });
     })
