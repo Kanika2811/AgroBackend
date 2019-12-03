@@ -11,8 +11,9 @@ dt.format('Y-m-d H:M:S');
 const path = require("path");
 const bodyParser = require("body-parser");
 const multer = require("multer");
+const fs = require('fs');
 
-router.post('/profile',function(req,res){
+router.post('/profile11',function(req,res){
     CommonComponent.verifyToken(req,res);
     let addclass = {
         imageUrl
@@ -74,7 +75,7 @@ router.post('/profile',function(req,res){
 });
 
 
-router.put('/profile',function(req,res){
+router.put('/profile11',function(req,res){
     CommonComponent.verifyToken(req,res);
     let addclass = {
         imageUrl
