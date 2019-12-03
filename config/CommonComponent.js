@@ -32,7 +32,8 @@ module.exports = {
             //call next middleware
             //next();
         }else{
-            res.json({"status":false,"Message":"User Unauthorized"});
+            //res.json({"status":false,"Message":"User Unauthorized"});
+            res.status(401).send({message : 'User Unauthorized'})
         }
     },
 
