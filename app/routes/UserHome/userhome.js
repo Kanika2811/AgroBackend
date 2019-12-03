@@ -190,7 +190,7 @@ router.get('/userHome', function(req,res){
                                                 }
                                                 else{
                                                     obj["favourite_videos"] =[];
-                                                    obj["all_subscription_expiry"] ="1585699160000";
+                                                    obj["app_expiry"] ="1585699160000";
                                                 }
                                                 return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
 
@@ -200,7 +200,7 @@ router.get('/userHome', function(req,res){
                                         else
                                         {
                                             obj["favourite_videos"] =[];
-                                            obj["all_subscription_expiry"] ="1585699160000";
+                                            obj["app_expiry"] ="1585699160000";
                                             return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
                                             
                                         }

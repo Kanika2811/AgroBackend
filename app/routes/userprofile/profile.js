@@ -134,8 +134,9 @@ router.put('/profile',function(req,res){
     });
 });
 router.post('/profile1',function(req,res){
-    const file=  req.body;
-console.log(file);
+    const now = new Date()  
+    const secondsSinceEpoch = Math.round(new Date().getTime() / 1000)  
+console.log(secondsSinceEpoch);    
 
 });
 module.exports = router;

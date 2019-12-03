@@ -63,8 +63,8 @@ module.exports = function(passport) {
                                 length:6,
                                 charset: refer_codes.charset("alphanumeric")
                             });
-                            var insertQuery = "INSERT INTO users (name,gender,dob, password, email_id, contact_no,token,otp,user_class,user_city,user_state,uuid,fcm,earn_and_refer_code,refer_amount,apply_referral) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                            connection.query(insertQuery,[req.body.name,req.body.gender,req.body.dob,newUserMysql.password, req.body.email_id,username,token,otp,req.body.user_class,req.body.user_city,req.body.user_state,req.body.uuid,req.body.fcm,earn_code,Constants.REFER_AMOUNT,req.body.apply_referral],function(err, rows) {
+                            var insertQuery = "INSERT INTO users (name,gender,dob, password, email_id, contact_no,token,otp,user_class,user_city,user_state,uuid,fcm,earn_and_refer_code,refer_amount,apply_referral,created_timestamp,updated_timestamp) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                            connection.query(insertQuery,[req.body.name,req.body.gender,req.body.dob,newUserMysql.password, req.body.email_id,username,token,otp,req.body.user_class,req.body.user_city,req.body.user_state,req.body.uuid,req.body.fcm,earn_code,Constants.REFER_AMOUNT,req.body.apply_referral,Math.round(new Date().getTime() / 1000),Math.round(new Date().getTime() / 1000)],function(err, rows) {
                             if(!err){
                                 connection.query("SELECT * FROM users WHERE contact_no = ?",[username], function(err, rows) {
                                     let obj ={};
@@ -149,7 +149,7 @@ module.exports = function(passport) {
                 password: bcrypt.hashSync(req.body.new_password, bcrypt.genSaltSync(10))  // use the generateHash function in our user model
             };
             var insertQuery = 'UPDATE users SET password = ?, is_verified = 1, updated_timestamp = ? WHERE contact_no=?';
-            connection.query(insertQuery,[newUserMysql.password,new Date(dt.now()),newUserMysql.contact_no],function(err, rows) {
+            connection.query(insertQuery,[newUserMysql.password,Math.round(new Date().getTime() / 1000),newUserMysql.contact_no],function(err, rows) {
                 if(err) {
                     return done(err); 
                 }

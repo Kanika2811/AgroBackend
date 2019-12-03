@@ -36,7 +36,7 @@ router.post('/VerifyOTP', async (req, res) => {
            {
                 if(otp == rows[0].otp){
                     let sql ='UPDATE  users SET is_verified = ?,updated_timestamp=? WHERE contact_no = ?';
-                    connection.query(sql,["1",new Date(dt.now()),contact_no], function(err, rows,fields) {
+                    connection.query(sql,["1",Math.round(new Date().getTime() / 1000),contact_no], function(err, rows,fields) {
                         if(!err){
                             connection.query("SELECT * FROM my_schema.users WHERE contact_no = ?",[contact_no], function(err, rows) {
                                 if(rows[0].delete_flag==0){

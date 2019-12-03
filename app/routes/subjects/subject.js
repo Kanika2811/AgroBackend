@@ -66,7 +66,7 @@ var CommonComponent = require("../../../config/CommonComponent");
                     return res.json({"status":false,"message":"Subject already exist"});
             }
             else {
-                connection.query('insert into subject(class_id,subject_name,medium) values(?,?,?)',[class_id,subject_name,medium],function(error,rows,fields){
+                connection.query('insert into subject(class_id,subject_name,medium,created_timestamp,updated_timestamp) values(?,?,?,?,?)',[class_id,subject_name,medium,Math.round(new Date().getTime() / 1000),Math.round(new Date().getTime() / 1000)],function(error,rows,fields){
                     if (error){
                         return  res.json({status:false,message:"getting error",error:error});}
                     else{
@@ -119,7 +119,7 @@ var CommonComponent = require("../../../config/CommonComponent");
             else {
 
                     let sql ='UPDATE subject SET subject_name = ? , medium=?, updated_timestamp=? WHERE id = ? and class_id=?';
-                    connection.query(sql, [subject_name,medium,new Date(dt.now()),subject_id,class_id], function (err, rows, fields) {
+                    connection.query(sql, [subject_name,medium,Math.round(new Date().getTime() / 1000),subject_id,class_id], function (err, rows, fields) {
                         if (err){
                         return  res.json({status:false,message:"getting error",error:err});}
                         else{
