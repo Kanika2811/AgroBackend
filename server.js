@@ -23,7 +23,10 @@ const like_comment=require('./app/routes/likecommentfavourite/like&comment.js');
 const favourite=require('./app/routes/likecommentfavourite/favourite.js');
 const assessment=require('./app/routes/assessment/assessment.js');
 const search=require('./app/routes/search/search.js');
-const userprofile=require('./app/routes/userprofile/profile.js');
+const userprofile=require('./app/routes/history/profile.js');
+const earnhistory=require('./app/routes/history/earnhistory.js');
+const redeemhistory=require('./app/routes/history/redeemhistory.js');
+const purchasedhistory=require('./app/routes/history/purchasedhistory.js');
 
 
 var passport = require('passport');
@@ -67,6 +70,9 @@ app.use(apiVersion,favourite);
 app.use(apiVersion,assessment);
 app.use(apiVersion,search);
 app.use(apiVersion,userprofile);
+app.use(apiVersion,earnhistory);
+app.use(apiVersion,redeemhistory);
+app.use(apiVersion,purchasedhistory);
 
 
 
