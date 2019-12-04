@@ -23,7 +23,7 @@ router.get('/earnHistory',function(req,res){
                     let users_id =[];
                     for(let i=0;i<rows.length;i++)
                     {
-                        users_id.push("'"+rows[i].user_id+"'");
+                        users_id.push("'"+rows[i].apply_referral_user_id+"'");
                     }
                     connection.query("SELECT * FROM users where id in("+users_id+")", function(err, rows1,field) {
                         if (err)
