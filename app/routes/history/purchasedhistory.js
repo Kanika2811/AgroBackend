@@ -29,8 +29,8 @@ router.get('/purchasedHistory',function(req,res){
                         rows[i].delete_flag =true;
                         else
                         rows[i].delete_flag =false;
-                        Home_data.push({"purchased_id":rows[i].purchased_id,"subscription_id":rows[i].subscription_id,"order_id":rows[i].order_id,
-                        "transaction_id":rows[i].transaction_id,"amount":rows[i].amount,"invoice_id":rows[i].invoice_id,"created_timestamp":rows[i].created_timestamp,"updated_timestamp":rows[i].updated_timestamp,
+                        Home_data.push({"purchased_id":rows[i].purchased_id,"subscription_id":rows[i].subscription_id,
+                        "transaction_id": rows[i].transaction_id,"amount":rows[i].amount,"invoice_id":rows[i].invoice_id,"created_timestamp":rows[i].created_timestamp,"updated_timestamp":rows[i].updated_timestamp,
                         "delete_flag":rows[i].delete_flag
                     })
                         

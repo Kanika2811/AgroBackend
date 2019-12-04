@@ -27,6 +27,7 @@ const userprofile=require('./app/routes/userprofile/profile.js');
 const earnhistory=require('./app/routes/history/earnhistory.js');
 const redeemhistory=require('./app/routes/history/redeemhistory.js');
 const purchasedhistory=require('./app/routes/history/purchasedhistory.js');
+const buysubscription=require('./app/routes/paytm/buysubscription.js');
 
 
 var passport = require('passport');
@@ -73,6 +74,8 @@ app.use(apiVersion,userprofile);
 app.use(apiVersion,earnhistory);
 app.use(apiVersion,redeemhistory);
 app.use(apiVersion,purchasedhistory);
+app.use(apiVersion,buysubscription);
+
 
 
 

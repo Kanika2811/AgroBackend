@@ -8,6 +8,7 @@ var dateTime = require('node-datetime');
 var dt = dateTime.create();
 dt.format('Y-m-d H:M:S');
 
+
 aws.config.update({
     secretAccessKey:Constants.AWS_secretAccessKey,
     accessKeyId:Constants.AWS_accessKeyId,
@@ -55,5 +56,12 @@ module.exports = {
                 return res(filelocation);
             });
     }
+      
+      
+      
+
+
 }
+
+
 

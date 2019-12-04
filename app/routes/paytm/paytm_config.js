@@ -4,6 +4,6 @@ module.exports = {
           WEBSITE: '',
       CHANNEL_ID: '',
       INDUSTRY_TYPE_ID: '',
-      MERCHANT_KEY : ''
+      MERCHANT_KEY : 'byElawQhIP%gTDtB'
       }
   }
