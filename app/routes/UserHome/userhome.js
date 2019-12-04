@@ -32,6 +32,7 @@ router.get('/userHome', function(req,res){
         if (rows.length) {
             let user_id = rows[0].id;
             let user_name = rows[0].name;
+            let wallet = rows[0].wallet;
             connection.query("SELECT * FROM classes where class_name=?",[req.query.user_class] ,function(err, rows,field) {
                 if (err)
                     return  res.json({status:false,message:"getting error in user class",error:err});
@@ -69,6 +70,11 @@ router.get('/userHome', function(req,res){
                                         rows[i].delete_flag=false;
                                     }else{
                                         rows[i].delete_flag=true;
+                                    }
+                                    if(rows[i].isdemovideo==0){
+                                        rows[i].isdemovideo=false;
+                                    }else{
+                                        rows[i].isdemovideo=true;
                                     }
                                 }
                                 connection.query("select * from like_videos where video_id in("+video_id+") and user_id = ?",[user_id], function(error,rows1, fields){
@@ -187,10 +193,12 @@ router.get('/userHome', function(req,res){
                                                     obj["favourite_videos"] =rows;
 
                                                     obj["app_expiry"] ="1585699160000";
+                                                    obj["wallet"] =wallet;
                                                 }
                                                 else{
                                                     obj["favourite_videos"] =[];
                                                     obj["app_expiry"] ="1585699160000";
+                                                    obj["wallet"] =wallet;
                                                 }
                                                 return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
 
@@ -201,6 +209,7 @@ router.get('/userHome', function(req,res){
                                         {
                                             obj["favourite_videos"] =[];
                                             obj["app_expiry"] ="1585699160000";
+                                            obj["wallet"] =wallet;
                                             return res.json({status:true,message:"Get Home Data successfully!!!",data:obj});
                                             
                                         }
