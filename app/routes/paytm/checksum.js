@@ -151,9 +151,9 @@ module.exports = {
     genchecksum(ver_param, "byElawQhIP%gTDtB", function (err, res) {
       
       if (verifychecksum(ver_param, "byElawQhIP%gTDtB",res)) {
-        return res.json({status:true,message:"Please Provide Payment Mode"});
+        res.send({status:true,message : 'Checksum verified'})
       } else {
-        return res.json({status:false,message:"Please Provide Payment Mode"});
+        res.send({status:false,message : 'Checksum Verification Failed'})
       }
     });
    
