@@ -7,7 +7,7 @@ connection.query('USE ' + dbconfig.database);
 var CommonComponent = require("../../../config/CommonComponent");
 const paytm = require('./checksum');
 
-router.post('/buysubscription',function(req,res){
+router.post('/generateChecksum',function(req,res){
     CommonComponent.verifyToken(req,res);
     let tokens = req.headers['authorization'];
     tokens = tokens.substr(7);
@@ -48,7 +48,7 @@ router.post('/buysubscription',function(req,res){
             } else {
                 console.log("verification failed");
             }*/
-            paytm.paymentpaytm(user_id,subscription_id);
+            paytm.generate_checksum(req,res);
         }
         else{
             return  res.status(401).send({status:401,message : 'User Unauthorized'})
@@ -56,6 +56,37 @@ router.post('/buysubscription',function(req,res){
     });
 });
 
+router.post('/VerifedChecksum',function(req,res){
+    CommonComponent.verifyToken(req,res);
+    let tokens = req.headers['authorization'];
+    tokens = tokens.substr(7);
+    connection.query("SELECT * FROM users where token=?",[tokens] ,function(err, rows,field) {
+        if (err)
+            return  res.json({status:false,message:"getting error",error:err});
+        if (rows.length) {
+            let user_id = rows[0].id;
+            let addclass = {
+                subscription_id,
+                payment_mode
+            } = req.body;
+           
+        
+            if(payment_mode == '' || payment_mode === undefined){
+                return res.json({status:false,message:"Please Provide Payment Mode",data:""});
+            }
+
+            if(subscription_id == '' || subscription_id === undefined){
+                return res.json({status:false,message:"Please Provide which subscription plan you want to purchased",data:""});
+            }
+
+         
+            paytm.verified_checksum(user_id,subscription_id);
+        }
+        else{
+            return  res.status(401).send({status:401,message : 'User Unauthorized'})
+        }
+    });
+});
 
 
 
