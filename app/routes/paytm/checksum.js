@@ -12,8 +12,8 @@ function paramsToString(params, mandatoryflag) {
   var tempKeys = Object.keys(params);
   tempKeys.sort();
   tempKeys.forEach(function (key) {
-  var n = params[key].includes("REFUND"); 
-   var m = params[key].includes("|");  
+  var n = params[key].toString().includes("REFUND"); 
+   var m = params[key].toString().includes("|");  
         if(n == true )
         {
           params[key] = "";
@@ -136,49 +136,45 @@ module.exports.genchecksumforrefund = genchecksumforrefund;
 module.exports = {
   
 
-  generate_checksum :function(req,res,user_id,subscription_id) {
+  generate_checksum :function(user_id,req,res) {
        var ver_param ={};
-  
       ver_param['MID']= 'STNikm10169772547719';
       ver_param['ORDER_ID']= req.body.subscription_id;
-      ver_param['CUST_ID']= req.body.user_id;
+      ver_param['CUST_ID']= user_id;
         ver_param['TXN_AMOUNT']=1;
         ver_param['CHANNEL_ID']='WEB';
         ver_param['INDUSTRY_TYPE_ID']='Retail';
         ver_param['WEBSITE']='WEBSTAGING';
         ver_param['CALLBACK_URL']='https://securegw-stage.paytm.in/order/process';
 
-    genchecksum(ver_param, "byElawQhIP%gTDtB", function (err, res) {
+    genchecksum(ver_param, "byElawQhIP%gTDtB", function (err, res1) {
       if (err)
-            return  res.json({status:false,message:"getting error when generate checksum",error:err});
+        res.json({status:false,message:"getting error when generate checksum",error:err});
       else
-      res.send({status:200,message : 'Checksum generated successfully',data:{checksum:res}})
+        res.json({status:true,message:"Checksum Generated successfully",data:{checksum:res1}});
      
     });
-   
+    
 
   },
 
-  verified_checksum :function(user_id,subscription_id) {
+  verified_checksum :function(user_id,req,res) {
     var ver_param ={};
 
    ver_param['MID']= 'STNikm10169772547719';
-   ver_param['ORDER_ID']= subscription_id;
+   ver_param['ORDER_ID']= req.body.subscription_id;
    ver_param['CUST_ID']= user_id;
      ver_param['TXN_AMOUNT']=1;
      ver_param['CHANNEL_ID']='WEB';
      ver_param['INDUSTRY_TYPE_ID']='Retail';
      ver_param['WEBSITE']='WEBSTAGING';
      ver_param['CALLBACK_URL']='https://securegw-stage.paytm.in/order/process';
-
- genchecksum(ver_param, "byElawQhIP%gTDtB", function (err, res) {
    
-   if (verifychecksum(ver_param, "byElawQhIP%gTDtB",res)) {
-     res.send({status:true,message : 'Checksum verified'})
+   if (verifychecksum(ver_param, "byElawQhIP%gTDtB",req.body.checksum)) {
+    res.json({status:true,message:"Checksum Verified"});
    } else {
-     res.send({status:false,message : 'Checksum Verification Failed'})
+     res.json({status:true,message:"Checksum Verificartion Failed"});
    }
- });
 
 
 }

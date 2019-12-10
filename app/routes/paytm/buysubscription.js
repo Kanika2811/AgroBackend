@@ -48,7 +48,8 @@ router.post('/generateChecksum',function(req,res){
             } else {
                 console.log("verification failed");
             }*/
-            paytm.generate_checksum(req,res);
+            paytm.generate_checksum(user_id,req,res,function(req,res){
+            });
         }
         else{
             return  res.status(401).send({status:401,message : 'User Unauthorized'})
@@ -67,7 +68,8 @@ router.post('/VerifedChecksum',function(req,res){
             let user_id = rows[0].id;
             let addclass = {
                 subscription_id,
-                payment_mode
+                payment_mode,
+                checksum
             } = req.body;
            
         
@@ -80,7 +82,7 @@ router.post('/VerifedChecksum',function(req,res){
             }
 
          
-            paytm.verified_checksum(user_id,subscription_id);
+            paytm.verified_checksum(user_id,req,res);
         }
         else{
             return  res.status(401).send({status:401,message : 'User Unauthorized'})
