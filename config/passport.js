@@ -58,14 +58,14 @@ module.exports = function(passport) {
                         uuid: req.body.uuid
                     }
                     sendOtp.send(username, Constants.OTP_SENDER_ID,otp, function (error, data) {
-                        jwt.sign({user},'SuperSecRetKey', { expiresIn: 120 }, (err, token) => {
+                        jwt.sign({user},'SuperSecRetKey', { expiresIn: 60 }, (err, token) => {
                           if(!err){  
                             let earn_code =refer_codes.generate({
                                 length:6,
                                 charset: refer_codes.charset("alphanumeric")
                             });
                             var insertQuery = "INSERT INTO users (name,gender,dob, password, email_id, contact_no,token,otp,user_class,user_city,user_state,uuid,fcm,earn_and_refer_code,refer_amount,apply_referral,created_timestamp,updated_timestamp) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                            connection.query(insertQuery,[req.body.name,req.body.gender,req.body.dob,newUserMysql.password, req.body.email_id,username,token,otp,req.body.user_class,req.body.user_city,req.body.user_state,req.body.uuid,req.body.fcm,earn_code,Constants.REFER_AMOUNT,req.body.referral_code,Math.round(new Date().getTime() / 1000),Math.round(new Date().getTime() / 1000)],function(err, rows) {
+                            connection.query(insertQuery,[req.body.name,req.body.gender,req.body.dob,newUserMysql.password, req.body.email_id,username,token,otp,req.body.user_class,req.body.user_city,req.body.user_state,req.body.uuid,req.body.fcm,earn_code,Constants.REFER_AMOUNT,req.body.referral_code,Date.now(),Date.now()],function(err, rows) {
                             if(!err){
                                 connection.query("SELECT * FROM users WHERE contact_no = ?",[username], function(err, rows) {
                                     let obj ={};
@@ -108,10 +108,16 @@ module.exports = function(passport) {
                 if(rows[0].is_verified === 0){
                     return done("User not verified", false, req.flash('loginMessage', 'Oops! Wrong password.'));
                  }
-                 if(!(req.body.uuid==rows[0].uuid && req.body.fcm==rows[0].fcm))
-                 {
-                    var insertQuery = 'UPDATE users SET uuid = ?, fcm = ?, updated_timestamp = ? WHERE contact_no=?';
-                    connection.query(insertQuery,[req.body.uuid,req.body.fcm,Math.round(new Date().getTime() / 1000),username],function(err, rows) {
+                 if(!(req.body.uuid==rows[0].uuid && req.body.fcm==rows[0].fcm)){
+                    const user = {
+                        contact_no: username,
+                        email_id: req.body.email_id,
+                        uuid: req.body.uuid
+                    }
+                    jwt.sign({user},'SuperSecRetKey', { expiresIn: 60 }, (err, token) => {
+
+                    var insertQuery = 'UPDATE users SET uuid = ?, fcm = ?, updated_timestamp = ?,token = ? WHERE contact_no=?';
+                    connection.query(insertQuery,[req.body.uuid,req.body.fcm,Date.now(),token,username],function(err, rows) {
                         if(err) {
                             return done(err); 
                         }
@@ -142,6 +148,7 @@ module.exports = function(passport) {
                             });
                             
                         }
+                     });
                     });
                     
                  }
@@ -184,7 +191,7 @@ module.exports = function(passport) {
                 password: bcrypt.hashSync(req.body.new_password, bcrypt.genSaltSync(10))  // use the generateHash function in our user model
             };
             var insertQuery = 'UPDATE users SET password = ?, is_verified = 1, updated_timestamp = ? WHERE contact_no=?';
-            connection.query(insertQuery,[newUserMysql.password,Math.round(new Date().getTime() / 1000),newUserMysql.contact_no],function(err, rows) {
+            connection.query(insertQuery,[newUserMysql.password,Date.now(),newUserMysql.contact_no],function(err, rows) {
                 if(err) {
                     return done(err); 
                 }

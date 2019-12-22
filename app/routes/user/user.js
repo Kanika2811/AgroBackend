@@ -44,6 +44,43 @@ module.exports = function(app, passport) {
 	});*/
 
 	// process the login form
+	/**
+ * @swagger
+ * /api/v1/login:
+ *   post:
+ *     tags:
+ *       - User
+ *     name: User Login
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             password:
+ *               type: string
+ *               format: password
+ *             contact_no:
+ *               type: string
+ *             uuid:
+ *               type: string
+ *             fcm:
+ *               type: string
+ *         required:
+ *           - contact_no
+ *           - password
+ *           - uuid
+ *           - fcm
+ *     responses:
+ *       '200':
+ *         description: Please Verified Your OTP
+ */
+
+
 	app.post('/api/v1/login',function(req,res,next){
 		let signup = {
 			contact_no,
