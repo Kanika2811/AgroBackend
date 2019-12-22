@@ -28,7 +28,7 @@ router.put('/editContactNo', async (req, res) => {
             return done(err);
         if (rows.length) {
             let sql ='UPDATE users SET contact_no = ?, updated_timestamp=? WHERE contact_no = ?';
-            connection.query(sql, [new_contact_no,Math.round(new Date().getTime() / 1000),old_contact_no], function (err, rows, fields) {
+            connection.query(sql, [new_contact_no,Date.now(),old_contact_no], function (err, rows, fields) {
                 if (err)
                     return  res.json({status:false,message:"getting error",error:err});
                 else{

@@ -43,7 +43,7 @@ const nanoid = require('nanoid/generate');
                     {
                         let create_fav_id=nanoid('1234567890abcdefghijklmnopqrstuvwxyz', 6);
                         
-                        connection.query("insert into favourite_videos(favourite_video_id,video_id,user_id,created_timestamp,updated_timestamp) values(?,?,?,?,?)",[create_fav_id,video_id,user_id,Math.round(new Date().getTime() / 1000),Math.round(new Date().getTime() / 1000)] ,function(err, rows,field) {
+                        connection.query("insert into favourite_videos(favourite_video_id,video_id,user_id,created_timestamp,updated_timestamp) values(?,?,?,?,?)",[create_fav_id,video_id,user_id,Date.now(),Date.now()] ,function(err, rows,field) {
                             if (err)
                                 return  res.json({status:false,message:"getting error",error:err});
                             else{

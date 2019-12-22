@@ -136,7 +136,7 @@ router.put('/profile11',function(req,res){
 });
 router.post('/profile1',function(req,res){
     const now = new Date()  
-    const secondsSinceEpoch = Math.round(new Date().getTime() / 1000)  
+    const secondsSinceEpoch = Date.now() 
 console.log(secondsSinceEpoch);    
 
 });

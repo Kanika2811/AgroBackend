@@ -9,7 +9,9 @@ dt.format('Y-m-d H:M:S');
 const express = require('express');
 const router = express.Router();
 connection.query('USE ' + dbconfig.database);
-var CommonComponent = require("../../../config/CommonComponent");
+const nanoid = require('nanoid/generate');
+let classId = nanoid('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10);
+
 /**
 * @swagger
 * /api/v1/UserClass:
@@ -98,9 +100,9 @@ router.get('/UserClass', function(req,res){
                     return res.json({"status":false,"message":"Class already exist"});
             }
             else {
-                connection.query('insert into classes(class_name,board,stream,created_timestamp,updated_timestamp) values(?,?,?,?,?)',[class_name,board.toUpperCase(),stream,Date.now(),Date.now()],function(error,rows,fields){
+                connection.query('insert into classes(class_id,class_name,board,stream,created_timestamp,updated_timestamp) values(?,?,?,?,?,?)',[classId,class_name,board.toUpperCase(),stream,Date.now(),Date.now()],function(error,rows,fields){
                     if(error)
-                        return res.json({"status":false,"message":"Error Adding new class class"});
+                        return res.json({"status":false,"message":"Error Adding new class class"+error});
                     else{
                         connection.query("SELECT * FROM classes WHERE class_name = ? and stream=?",[class_name,stream], function(err, rows) {
                      return res.json({"status":true,"message":"Add class successfully!!!","data":rows[0]});
@@ -133,7 +135,7 @@ router.get('/UserClass', function(req,res){
  *             stream:
  *               type: string
  *             class_id:
- *               type: integer
+ *               type: string
  *         required:
  *           - class_name
  *           - board
@@ -183,7 +185,7 @@ router.get('/UserClass', function(req,res){
             }
             else {
 
-                let sql ='UPDATE classes SET class_name = ?, board=?, stream=?, updated_timestamp=? WHERE id = ?';
+                let sql ='UPDATE classes SET class_name = ?, board=?, stream=?, updated_timestamp=? WHERE class_id = ?';
                 connection.query(sql, [class_name,board, stream,new Date(dt.now()), class_id], function (err, rows, fields) {
                     if(!!err) {
                         return  res.json({status:false,message:"getting error",error:error});}
@@ -208,26 +210,28 @@ router.get('/UserClass', function(req,res){
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: body
- *         in: body
+ *       - name: class_id
+ *         in: query
  *         schema:
  *           type: object
  *           properties:
- *             class_name:
- *                type: String
+ *             class_id:
+ *                type: string
  *         required:
- *           - class_name
+ *           - class_id
  *     responses:
  *       200:
  *         description: Class deleted successfully!!
  */
     router.delete('/UserClass',function(req,res){
        // CommonComponent.verifyToken(req,res)
-       
-    if (!typeof class_name === 'string' ) {
+       let editclass = {
+        class_id:class_id
+    } = req.query;
+    if (!typeof class_id === 'string' ) {
         return res.json({"status":false,"message":"Invalid data provided"});
     }
-        connection.query('DELETE FROM classes WHERE class_name=?',[req.body.class_name],function(err,rows,fields){
+        connection.query('DELETE FROM classes WHERE class_id=?',[class_id],function(err,rows,fields){
             if(!!err){
                 return  res.json({status:false,message:"getting error",error:err});}
             else{

@@ -103,7 +103,7 @@ router.post('/assessment',function(req,res){
             return  res.json({status:false,message:"getting error",error:err});
         if (rows.length) {
             let user_id = rows[0].id;
-            connection.query("insert into user_result(video_id,result,user_id,created_timestamp,updated_timestamp) values(?,?,?,?,?)",[video_id,result,user_id,Math.round(new Date().getTime() / 1000),Math.round(new Date().getTime() / 1000)] ,function(err, rows,field) {
+            connection.query("insert into user_result(video_id,result,user_id,created_timestamp,updated_timestamp) values(?,?,?,?,?)",[video_id,result,user_id,Date.now(),Date.now()] ,function(err, rows,field) {
                 if (err)
                     return  res.json({status:false,message:"getting error",error:err});
                 else{

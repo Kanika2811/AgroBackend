@@ -41,7 +41,7 @@ const uploadFile = (fileName) => {
     });
 };
 
-const secondsSinceEpoch = Math.round(new Date(dt.now())/ 1000)  
+const secondsSinceEpoch =Date.now() 
 const upload = multer({
     storage: multerS3({
       s3: s3,
@@ -82,7 +82,7 @@ router.post('/profile', function(req,res){
                         const imageName = req.file.key;
                         const imageLocation = req.file.location;
                         let sql ='UPDATE  users SET profile_image = ?,updated_timestamp=? WHERE contact_no = ?';
-                        connection.query(sql,[imageLocation,Math.round(new Date().getTime() / 1000),user_id], function(err, rows,fields) {
+                        connection.query(sql,[imageLocation,Date.now(),user_id], function(err, rows,fields) {
                         if(!err){
                             connection.query("SELECT * FROM users WHERE contact_no = ?",[user_id], function(err,rows) {
                                 if(rows[0].delete_flag==0){
@@ -155,7 +155,7 @@ router.put('/profile', function(req,res){
                         const imageName = req.file.key;
                         const imageLocation = req.file.location;
                         let sql ='UPDATE  users SET profile_image = ?,updated_timestamp=? WHERE contact_no = ?';
-                        connection.query(sql,[imageLocation,Math.round(new Date().getTime() / 1000),user_id], function(err, rows,fields) {
+                        connection.query(sql,[imageLocation,Date.now(),user_id], function(err, rows,fields) {
                         if(!err){
                             connection.query("SELECT * FROM users WHERE contact_no = ?",[user_id], function(err,rows) {
                                 if(rows[0].delete_flag==0){

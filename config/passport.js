@@ -58,7 +58,7 @@ module.exports = function(passport) {
                         uuid: req.body.uuid
                     }
                     sendOtp.send(username, Constants.OTP_SENDER_ID,otp, function (error, data) {
-                        jwt.sign({user},'SuperSecRetKey', { expiresIn: 60 }, (err, token) => {
+                        jwt.sign({user},'SuperSecRetKey', {}, (err, token) => {
                           if(!err){  
                             let earn_code =refer_codes.generate({
                                 length:6,
@@ -114,7 +114,7 @@ module.exports = function(passport) {
                         email_id: req.body.email_id,
                         uuid: req.body.uuid
                     }
-                    jwt.sign({user},'SuperSecRetKey', { expiresIn: 60 }, (err, token) => {
+                    jwt.sign({user},'SuperSecRetKey', { }, (err, token) => {
 
                     var insertQuery = 'UPDATE users SET uuid = ?, fcm = ?, updated_timestamp = ?,token = ? WHERE contact_no=?';
                     connection.query(insertQuery,[req.body.uuid,req.body.fcm,Date.now(),token,username],function(err, rows) {

@@ -1,5 +1,6 @@
 var mysql = require('mysql');
 var dbconfig = require('../../../config/database');
+var verifyToken = require('../../../config/Verify')
 var connection = mysql.createConnection(dbconfig.connection);
 var dateTime = require('node-datetime');
 var dt = dateTime.create();
@@ -8,12 +9,43 @@ const express = require('express');
 const router = express.Router();
 connection.query('USE ' + dbconfig.database);
 var CommonComponent = require("../../../config/CommonComponent");
-
-    router.get('/subjects', function(req,res){
-        CommonComponent.verifyToken(req,res);
+const nanoid = require('nanoid/generate');
+let subjectId = nanoid('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10);
+const color_code = '#00A1FF'
+/**
+* @swagger
+* /api/v1/subjects:
+*   get:
+*     tags:
+*       - Subject
+*     name: Get All Subjects
+*     consumes:
+*       - application/json
+*     parameters:
+*       - name: x-access-token
+*         in: header
+*         schema:
+*           type: string
+*           format: uuid
+*         required: true
+*       - name: class_id
+*         in: query
+*         schema:
+*           type: string
+*         required: true
+*     responses:
+*       200:
+*         description: Getting all classes
+*       401:
+*         description: Failed to authenticate token.
+*       403:
+*         description: No token provided.
+*       
+*/
+    router.get('/subjects',verifyToken, function(req,res){
         let getsubject = {
             class_id
-        } = req.body;
+        } = req.query;
         if (!(typeof class_id === 'string' )) {
             return res.json({"status":false,"message":"Invalid data provided"});
         }
@@ -21,23 +53,54 @@ var CommonComponent = require("../../../config/CommonComponent");
         if(class_id == '' || class_id === undefined){
             return res.json({status:false,Message:"Please Select Class first"});
         }
-        connection.query('select * from subject where class_id=?',[class_id],function(error,rows, fields){
-            if (err)
-                return  res.json({status:false,message:"getting error",error:err});
+        connection.query('select * from subject where class_id =?',[class_id],function(error,rows, fields){
+            if (error)
+                return  res.json({status:false,message:"getting error",error:error});
             if(rows.length==0)
-            {
-                return res.json({"message":"There is no subject in this Class"});
-            }
+                return res.json({status:false,"message":"There is no subject in this Class"});
             else
-            {
-                return res.json({"message":"subject list","data":rows});
-            }
-               
+                return res.json({status:true,"message":"subject list","data":rows});
         });
     })
+/**
+ * @swagger
+ * /api/v1/subjects:
+ *   post:
+ *     tags:
+ *       - Subject
+ *     name: Insert New Subject
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+*       - name: x-access-token
+*         in: header
+*         schema:
+*           type: string
+*           format: uuid
+*         required: true
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             class_id:
+ *               type: string
+ *             subject_name:
+ *               type: string
+ *             medium:
+ *               type: string
+ *         required:
+ *           - class_id
+ *           - subject_name
+ *           - medium
+ *     responses:
+ *       '200':
+ *         description: Added Subject successfully!!!
+ */
 
-    router.post('/subjects',function(req,res){
-        CommonComponent.verifyToken(req,res)
+    router.post('/subjects',verifyToken,function(req,res){
         let addclass = {
             class_id,
             subject_name,
@@ -59,19 +122,19 @@ var CommonComponent = require("../../../config/CommonComponent");
             return res.json({status:false,Message:"Please Enter Subject Medium Name."});
         }
 
-        connection.query('select * from subject WHERE subject_name = ? and medium=? and class_id=?', [subject_name,medium,class_id],function(error,rows,fields){
+        connection.query('select * from subject WHERE subject_name = ? and medium=? and class_id=?', [subject_name,medium,class_id],function(err,rows,fields){
             if (err)
                 return  res.json({status:false,message:"getting error",error:err});
             if(rows.length >= 1&&subject_name === rows[0].subject_name){
                     return res.json({"status":false,"message":"Subject already exist"});
             }
             else {
-                connection.query('insert into subject(class_id,subject_name,medium,created_timestamp,updated_timestamp) values(?,?,?,?,?)',[class_id,subject_name,medium,Math.round(new Date().getTime() / 1000),Math.round(new Date().getTime() / 1000)],function(error,rows,fields){
+                connection.query('insert into subject(subject_id,class_id,subject_name,medium,color_code,created_timestamp,updated_timestamp) values(?,?,?,?,?,?,?)',[subjectId,class_id,subject_name,medium,color_code,Date.now(),Date.now()],function(error,rows,fields){
                     if (error){
                         return  res.json({status:false,message:"getting error",error:error});}
                     else{
-                        connection.query("select * from subject WHERE subject_name = ? and medium=? and class_id=?",[subject_name,medium,class_id], function(err, rows) {
-                        return res.json({"message":"Add Subject successfully!!!","data":rows[0]});
+                        connection.query("select * from subject WHERE class_id=?",[class_id], function(err, rows) {
+                        return res.json({"message":"Added Subject successfully!!!","data":rows[0]});
                         });
 
                     }
@@ -82,8 +145,40 @@ var CommonComponent = require("../../../config/CommonComponent");
 
     })
 
-    router.put('/subjects',function(req,res){
-        CommonComponent.verifyToken(req,res)
+    /**
+ * @swagger
+ * /api/v1/subjects:
+ *   put:
+ *     tags:
+ *       - Subject
+ *     description: Update existing Subject
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             class_id:
+ *               type: string
+ *             subject_id:
+ *               type: string
+ *             subject_name:
+ *               type: string
+ *             medium:
+ *               type: integer
+ *         required:
+ *           - class_id
+ *           - subject_id
+ *           - subject_name
+ *           - medium
+ *         
+ *     responses:
+ *       200:
+ *         description: Successfully Updated
+ */
+    router.put('/subjects',verifyToken,function(req,res){
        
         let addclass = {
             class_id,
@@ -119,7 +214,7 @@ var CommonComponent = require("../../../config/CommonComponent");
             else {
 
                     let sql ='UPDATE subject SET subject_name = ? , medium=?, updated_timestamp=? WHERE id = ? and class_id=?';
-                    connection.query(sql, [subject_name,medium,Math.round(new Date().getTime() / 1000),subject_id,class_id], function (err, rows, fields) {
+                    connection.query(sql, [subject_name,medium,Date.now(),subject_id,class_id], function (err, rows, fields) {
                         if (err){
                         return  res.json({status:false,message:"getting error",error:err});}
                         else{
@@ -131,10 +226,32 @@ var CommonComponent = require("../../../config/CommonComponent");
              }
          });
     })
+/**
+ * @swagger
+ * /api/v1/subjects:
+ *   delete:
+ *     tags:
+ *       - Subject
+ *     description: Deletes existing Subject
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             class_name:
+ *                type: String
+ *         required:
+ *           - class_name
+ *     responses:
+ *       200:
+ *         description: Class deleted successfully!!
+ */
 
-    router.delete('/subjects',function(req,res){
-        CommonComponent.verifyToken(req,res)
-        connection.query('DELETE FROM subject WHERE id=?',[req.body.id],function(err,rows,fields){
+    router.delete('/subjects',verifyToken,function(req,res){
+        connection.query('DELETE FROM subject WHERE subject_id=?',[req.body.subject_id],function(err,rows,fields){
             if (err){
                 return  res.json({status:false,message:"getting error",error:err});}
             else{
@@ -143,4 +260,5 @@ var CommonComponent = require("../../../config/CommonComponent");
 
         });
     })
+    
 module.exports = router;

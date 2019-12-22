@@ -108,7 +108,7 @@ const nanoid = require('nanoid/generate');
                     if(req.body.comment == '' || req.body.comment === undefined){
                         return res.json({status:false,message:"Please Provide user comment",data:""});
                     }
-                    connection.query("insert into comments(video_id,user_id,comment,created_timestamp,updated_timestamp) values(?,?,?,?,?)",[video_id,user_id,req.body.comment,Math.round(new Date().getTime() / 1000),Math.round(new Date().getTime() / 1000)] ,function(err, rows,field) {
+                    connection.query("insert into comments(video_id,user_id,comment,created_timestamp,updated_timestamp) values(?,?,?,?,?)",[video_id,user_id,req.body.comment,Date.now(),Date.now()] ,function(err, rows,field) {
                         if (err)
                             return  res.json({status:false,message:"getting error",error:err});
                         else{
@@ -132,12 +132,12 @@ const nanoid = require('nanoid/generate');
                                     return  res.json({status:false,message:"This Video is Already marked as Like....."});
                                 }
                                 else{
-                                    connection.query("update videos set video_like=?,updated_timestamp=? where video_id=?",[rows[0].video_like,Math.round(new Date().getTime() / 1000),video_id] ,function(err, rows,field) {
+                                    connection.query("update videos set video_like=?,updated_timestamp=? where video_id=?",[rows[0].video_like,Date.now(),video_id] ,function(err, rows,field) {
                                         if (err)
                                             return  res.json({status:false,message:"getting error",error:err});
                                         else{
                                             let create_like_id=nanoid('1234567890abcdefghijklmnopqrstuvwxyz', 6);
-                                            connection.query("insert into like_videos(like_video_id,video_id,user_id,created_timestamp,updated_timestamp) values(?,?,?,?,?)",[create_like_id,video_id,user_id,Math.round(new Date().getTime() / 1000),Math.round(new Date().getTime() / 1000)] ,function(err, rows,field) {
+                                            connection.query("insert into like_videos(like_video_id,video_id,user_id,created_timestamp,updated_timestamp) values(?,?,?,?,?)",[create_like_id,video_id,user_id,Date.now(),Date.now()] ,function(err, rows,field) {
                                                 if (err)
                                                     return  res.json({status:false,message:"getting error",error:err});
                                                 else{

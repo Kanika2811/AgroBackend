@@ -11,7 +11,6 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var app      = express();
 var port     = process.env.PORT || 8080;
-var os = require("os");
 const verifyUser = require('./app/routes/user/verifyUser.js');
 const userClass = require('./app/routes/UserClass/UserClass.js');
 const allCityState = require('./app/routes/user/allcitystate.js');
@@ -60,7 +59,7 @@ const swaggerDefinition = {
 
   const options = {
 	swaggerDefinition,
-	apis: ['./app/routes/user/*.js','./app/routes/UserClass/*.js'],
+	apis: ['./app/routes/user/*.js','./app/routes/UserClass/*.js','./app/routes/subjects/*.js'],
   };
   const swaggerSpec = swaggerJSDoc(options);
 app.use(morgan('dev')); // log every request to the console

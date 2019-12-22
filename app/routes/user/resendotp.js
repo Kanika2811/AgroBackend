@@ -30,7 +30,7 @@ router.post('/resendOTP', async (req, res) => {
                 if(!err){
 
                     let sql ='UPDATE  users SET otp = ?,is_verified =0, updated_timestamp=? WHERE contact_no = ?';
-                    connection.query(sql,[otp,Math.round(new Date().getTime() / 1000),contact_no], function(err, rows,fields) {
+                    connection.query(sql,[otp,Date.now(),contact_no], function(err, rows,fields) {
                         if(!err){
                            
                             let obj ={};

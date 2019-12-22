@@ -187,7 +187,12 @@ CREATE TABLE `' + dbconfig.database + '`.`' + dbconfig.table_topic + '`(\
     `delete_flag` tinyint(1) DEFAULT 0, \
     PRIMARY KEY(`id`), \
     UNIQUE INDEX `id_UNIQUE` (`id` ASC) \
-)');
+)',function (err, result) {
+    if (err)
+        console.log("Table already exist");
+    else 
+        console.log("Table created");
+  });
 
 connection.query('\
 CREATE TABLE `' + dbconfig.database + '`.`' + dbconfig.table_demo_videos + '` ( \
@@ -392,6 +397,15 @@ CREATE TABLE `' + dbconfig.database + '`.`' + dbconfig.table_subscription + '` (
           else 
               console.log("Table created");
         });
+
+        var alterClassTable ="ALTER TABLE my_schema.classes ADD class_id VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+    connection.query(alterClassTable, function (err, result) {
+    if (err)
+    console.log("Alter error");
+    else 
+    console.log("Alter success");
+  });
+
 connection.end();
 
 
