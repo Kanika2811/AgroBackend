@@ -5,7 +5,20 @@ const express = require('express');
 const router = express();
 connection.query('USE ' + dbconfig.database);
 const yourhandle= require('countrycitystatejson');
-
+/**
+* @swagger
+* /api/v1/allClassState:
+*   get:
+*     tags:
+*       - State/city
+*     name: Get All States
+*     consumes:
+*       - application/json
+*     responses:
+*       200:
+*         description: Getting All States
+*       
+*/
 router.get('/allClassState', function(req,res){
     
     let state_data =[];
@@ -23,11 +36,32 @@ router.get('/allClassState', function(req,res){
                 }
                 obj["classes"] = classes;
                 state_data.push(obj)
-               return res.json({"status":true,"message":"Successfully Get all State and Classes data","data":state_data});
+               return res.json({"status":true,"message":"Getting All States","data":state_data});
             }
         });
     });
 
+    
+/**
+* @swagger
+* /api/v1/city:
+*   get:
+*     tags:
+*       -  State/city
+*     name: Get all States
+*     consumes:
+*       - application/json
+*     parameters:
+*       - in: query
+*         name: user_state
+*         schema:
+*           type: string
+*         description: Enter User Selected State
+*     responses:
+*       200:
+*         description: Getting all Cities
+*       
+*/
     router.get('/city',function(req,res){
         let user_state_data = {
             user_state,

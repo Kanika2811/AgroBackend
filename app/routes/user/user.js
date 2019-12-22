@@ -82,6 +82,66 @@ module.exports = function(app, passport) {
 	  })(req,res,next)
 	});
 
+/**
+ * @swagger
+ * /api/v1/signup:
+ *   post:
+ *     tags:
+ *       - User
+ *     name: Create New User
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             name:
+ *               type: string
+ *             gender:
+ *               type: string
+ *             dob:
+ *               type: string
+ *             email_id:
+ *               type: string
+ *             password:
+ *               type: string
+ *               format: password
+ *             contact_no:
+ *               type: string
+ *             user_state:
+ *               type: string
+ *             user_city:
+ *               type: string
+ *             user_class:
+ *               type: string
+ *             uuid:
+ *               type: string
+ *             fcm:
+ *               type: string
+ *             referral_code:
+ *               type: string
+ *         required:
+ *           - name
+ *           - gender
+ *           - dob
+ *           - email_id
+ *           - contact_no
+ *           - password
+ *           - user_class
+ *           - user_state
+ *           - user_city
+ *           - uuid
+ *           - fcm
+ *     responses:
+ *       '200':
+ *         description: Please Verified Your OTP
+ */
+
+
 	app.post('/api/v1/signup',function(req,res,next){
 		let signup = {
 			name,
@@ -95,7 +155,7 @@ module.exports = function(app, passport) {
 			user_state,
 			uuid,
 			fcm,
-			apply_referral
+			referral_code
 			} = req.body;
 		if (!(typeof name === 'string' ||
 		typeof gender === 'string' ||
@@ -108,7 +168,7 @@ module.exports = function(app, passport) {
 		typeof user_state === 'string' ||
 		typeof uuid === 'string' ||
 		typeof fcm === 'string' ||
-		typeof apply_referral === 'string')) {
+		typeof referral_code === 'string')) {
 			return res.json({"status":false,"message":"Invalid data provided"});
 		}
 		if(name == '' || name === undefined){

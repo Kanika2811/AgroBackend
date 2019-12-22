@@ -1,13 +1,18 @@
 {
-    "name": "agro-backend",
-    "main": "server.js",
-    "scripts": {
-      "start": "node ./server"
-    },
-    "dependencies": {
-      "api": "git@github.com:GauravRohit/ApiModule.git"
-    },
-    "devDependencies": {
-      "nodemon": "^1.19.3"
-    }
+  "name": "agro-backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node ./server"
+  },
+  "dependencies": {
+    "api": "git@github.com:GauravRohit/ApiModule.git",
+    "file-encryptor": "^0.1.1",
+    "moment": "^2.24.0",
+    "swagger-jsdoc": "^3.5.0",
+    "swagger-ui-express": "^4.1.2",
+    "voucher-code-generator": "^1.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
   }
+}
