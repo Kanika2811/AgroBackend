@@ -229,28 +229,33 @@ router.post('/subjects', verifyToken, function (req, res) {
  *     tags:
  *       - Subject
  *     description: Update existing Subject
+ *     consumes:
+ *       - multipart/form-data
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: body
- *         in: body
+ *       - name: x-access-token
+ *         in: header
  *         schema:
- *           type: object
- *           properties:
- *             class_id:
- *               type: string
- *             subject_id:
- *               type: string
- *             subject_name:
- *               type: string
- *             medium:
- *               type: integer
- *         required:
- *           - class_id
- *           - subject_id
- *           - subject_name
- *           - medium
- *         
+ *           type: string
+ *           format: uuid
+ *         required: true
+ *       - name: class_id
+ *         in: formData
+ *         type: text
+ *         required: true
+ *       - name: subject_name
+ *         in: formData
+ *         type: text
+ *         required: true
+ *       - name: medium
+ *         in: formData
+ *         type: text
+ *         required: true
+ *       - name: subject_image
+ *         in: formData
+ *         type: file
+ *         required: true
  *     responses:
  *       200:
  *         description: Successfully Updated

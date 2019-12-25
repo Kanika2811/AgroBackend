@@ -77,7 +77,7 @@ module.exports = function(app, passport) {
  *           - fcm
  *     responses:
  *       '200':
- *         description: Please Verified Your OTP
+ *         description: User login successfully
  */
 
 
