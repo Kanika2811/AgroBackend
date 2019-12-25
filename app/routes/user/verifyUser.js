@@ -9,6 +9,34 @@ var dateTime = require('node-datetime');
 var dt = dateTime.create();
 dt.format('Y-m-d H:M:S');
 connection.query('USE ' + dbconfig.database);
+/**
+ * @swagger
+ * /api/v1/VerifyOTP:
+ *   post:
+ *     tags:
+ *       - Verify OTP
+ *     name: Verify User with OTP
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             contact_no:
+ *               type: string
+ *             otp:
+ *               type: string
+ *         required:
+ *           - contact_no
+ *           - otp
+ *     responses:
+ *       '200':
+ *         description: Please Verified Your OTP
+ */
 
 router.post('/VerifyOTP', async (req, res) => {
 
