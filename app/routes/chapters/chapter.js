@@ -322,11 +322,11 @@ router.put('/subjects', verifyToken, function (req, res) {
 })
 /**
  * @swagger
- * /api/v1/subjects:
+ * /api/v1/chapters:
  *   delete:
  *     tags:
- *       - Subject
- *     description: Deletes existing Subject
+ *       - Chapter
+ *     description: Deletes existing Chapter
  *     produces:
  *       - application/json
  *     parameters:
@@ -335,10 +335,10 @@ router.put('/subjects', verifyToken, function (req, res) {
  *         schema:
  *           type: object
  *           properties:
- *             class_name:
+ *             chapters_id:
  *                type: String
  *         required:
- *           - class_name
+ *           - chapters_id
  *     responses:
  *       200:
  *         description: Class deleted successfully!!
