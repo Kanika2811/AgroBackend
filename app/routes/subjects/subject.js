@@ -144,7 +144,7 @@ const upload = multer({
 
 router.post('/subjects', verifyToken, function (req, res) {
 
-   
+
     upload(req, res, (error) => {
         let addclass = {
             class_id,
@@ -198,7 +198,7 @@ router.post('/subjects', verifyToken, function (req, res) {
                 });
             } else {
                 console.log(req.file.location)
-                connection.query('insert into subject(subject_id,class_id,subject_name,medium,color_code,icons,created_timestamp,updated_timestamp) values(?,?,?,?,?,?,?,?)', [subjectId, class_id, subject_name, medium, color_code,req.file.location, Date.now(), Date.now()], function (error, rows, fields) {
+                connection.query('insert into subject(subject_id,class_id,subject_name,medium,color_code,icons,created_timestamp,updated_timestamp) values(?,?,?,?,?,?,?,?)', [subjectId, class_id, subject_name, medium, color_code, req.file.location, Date.now(), Date.now()], function (error, rows, fields) {
                     if (error) {
                         return res.json({
                             status: false,
@@ -240,10 +240,6 @@ router.post('/subjects', verifyToken, function (req, res) {
  *           type: string
  *           format: uuid
  *         required: true
- *       - name: class_id
- *         in: formData
- *         type: text
- *         required: true
  *       - name: subject_name
  *         in: formData
  *         type: text
@@ -252,88 +248,87 @@ router.post('/subjects', verifyToken, function (req, res) {
  *         in: formData
  *         type: text
  *         required: true
- *       - name: subject_image
- *         in: formData
- *         type: file
- *         required: true
  *     responses:
  *       200:
  *         description: Successfully Updated
  */
 router.put('/subjects', verifyToken, function (req, res) {
-
-    let addclass = {
-        class_id,
-        subject_id,
-        subject_name,
-        medium
-    } = req.body;
-    if (!(typeof class_id === 'string' ||
-            typeof subject_id === 'string' ||
-            typeof subject_name === 'string' ||
-            typeof medium === 'string')) {
-        return res.json({
-            "status": false,
-            "message": "Invalid data provided"
-        });
-    }
-
-    if (class_id == '' || class_id === undefined) {
-        return res.json({
-            status: false,
-            Message: "Please Provide Class Id."
-        });
-    }
-    if (subject_id == '' || subject_id === undefined) {
-        return res.json({
-            status: false,
-            Message: "Please Provide Subject Id."
-        });
-    }
-    if (subject_name == '' || subject_name === undefined) {
-        return res.json({
-            status: false,
-            Message: "Please Provide Subject Name."
-        });
-    }
-    if (medium == '' || medium === undefined) {
-        return res.json({
-            status: false,
-            Message: "Please Provide Subject Medium Name."
-        });
-    }
-    connection.query('select * from subject WHERE subject_name = ? and medium=? and class_id=?', [subject_name, medium, class_id], function (error, rows, fields) {
-        if (error)
+    upload(req, res, (error) => {
+       
+        if (req.fileValidationError) {
+            return res.send(req.fileValidationError);
+        }  else if (error) {
             return res.json({
                 status: false,
-                message: "getting error",
+                message: "getting error ",
                 error: error
             });
-        if (rows.length >= 1 && subject_name === rows[0].subject_name) {
+        }
+        let addclass = {
+            subject_id,
+            subject_name,
+            medium
+        } = req.body;
+        if (!(typeof subject_id === 'string' ||
+                typeof subject_name === 'string' ||
+                typeof medium === 'string')) {
             return res.json({
                 "status": false,
-                "message": "Subject already exist"
-            });
-        } else {
-
-            let sql = 'UPDATE subject SET subject_name = ? , medium=?, updated_timestamp=? WHERE id = ? and class_id=?';
-            connection.query(sql, [subject_name, medium, Date.now(), subject_id, class_id], function (err, rows, fields) {
-                if (err) {
-                    return res.json({
-                        status: false,
-                        message: "getting error",
-                        error: err
-                    });
-                } else {
-                    connection.query('select * from subject WHERE subject_name = ? and medium=? and class_id=?', [subject_name, medium, class_id], function (error, rows, fields) {
-                        return res.json({
-                            "message": "Edit Subject successfully!!!",
-                            "data": rows[0]
-                        });
-                    });
-                }
+                "message": "Invalid data provided"
             });
         }
+
+        if (subject_id == '' || subject_id === undefined) {
+            return res.json({
+                status: false,
+                Message: "Please Provide Subject Id."
+            });
+        }
+        if (subject_name == '' || subject_name === undefined) {
+            return res.json({
+                status: false,
+                Message: "Please Provide Subject Name."
+            });
+        }
+        if (medium == '' || medium === undefined) {
+            return res.json({
+                status: false,
+                Message: "Please Provide Subject Medium Name."
+            });
+        }
+        connection.query('select * from subject WHERE subject_id', [subject_id], function (error, rows, fields) {
+            if (error)
+                return res.json({
+                    status: false,
+                    message: "getting error",
+                    error: error
+                });
+            if (rows.length = 0) {
+                return res.json({
+                    "status": false,
+                    "message": "This Particular Subject does not exist"
+                });
+            } else {
+
+                let sql = 'UPDATE subject SET subject_name = ? , medium=?, updated_timestamp=? WHERE id = ?';
+                connection.query(sql, [subject_name, medium, Date.now(), subject_id], function (err, rows, fields) {
+                    if (err) {
+                        return res.json({
+                            status: false,
+                            message: "getting error",
+                            error: err
+                        });
+                    } else {
+                        connection.query('select * from subject WHERE subject_name = ? and medium=? and subject_id=?', [subject_name, medium, subject_id], function (error, rows, fields) {
+                            return res.json({
+                                "message": "Edit Subject successfully!!!",
+                                "data": rows[0]
+                            });
+                        });
+                    }
+                });
+            }
+        });
     });
 })
 /**
