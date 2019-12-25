@@ -8,7 +8,6 @@ dt.format('Y-m-d H:M:S');
 const express = require('express');
 const router = express.Router();
 connection.query('USE ' + dbconfig.database);
-var CommonComponent = require("../../../config/CommonComponent");
 const nanoid = require('nanoid/generate');
 let subjectId = nanoid('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10);
 const color_code = '#00A1FF'
@@ -111,15 +110,15 @@ router.get('/subjects', verifyToken, function (req, res) {
  *         required: true
  *       - name: class_id
  *         in: formData
- *         type: text
+ *         type: string
  *         required: true
  *       - name: subject_name
  *         in: formData
- *         type: text
+ *         type: string
  *         required: true
  *       - name: medium
  *         in: formData
- *         type: text
+ *         type: string
  *         required: true
  *       - name: subject_image
  *         in: formData
@@ -163,6 +162,14 @@ router.post('/subjects', verifyToken, function (req, res) {
                 status: false,
                 message: "getting error ",
                 error: error
+            });
+        }
+        if (!(typeof class_id === 'string' ||
+                typeof subject_name === 'string' ||
+                typeof medium === 'string')) {
+            return res.json({
+                "status": false,
+                "message": "Invalid data provided"
             });
         }
         if (class_id == '' || class_id === undefined) {
@@ -254,10 +261,10 @@ router.post('/subjects', verifyToken, function (req, res) {
  */
 router.put('/subjects', verifyToken, function (req, res) {
     upload(req, res, (error) => {
-       
+
         if (req.fileValidationError) {
             return res.send(req.fileValidationError);
-        }  else if (error) {
+        } else if (error) {
             return res.json({
                 status: false,
                 message: "getting error ",

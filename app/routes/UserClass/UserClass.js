@@ -185,12 +185,12 @@ router.get('/UserClass', function(req,res){
             }
             else {
 
-                let sql ='UPDATE classes SET class_name = ?, board=?, stream=?, updated_timestamp=? WHERE class_id = ?';
+                let sql ='UPDATE classes SET class_name = ?, board = ?, stream = ?, updated_timestamp = ? WHERE class_id = ?';
                 connection.query(sql, [class_name,board, stream,new Date(dt.now()), class_id], function (err, rows, fields) {
                     if(!!err) {
                         return  res.json({status:false,message:"getting error",error:error});}
                     else{
-                        connection.query("SELECT * FROM classes WHERE id=?",[class_id], function(err, rows) {
+                        connection.query("SELECT * FROM classes WHERE class_id=?",[class_id], function(err, rows) {
                         return res.json({"status":"true","message":"Edit class successfully!!!","data":rows[0]});
                         });
                     }
