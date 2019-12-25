@@ -35,7 +35,7 @@ connection.query('USE ' + dbconfig.database);
  *           - otp
  *     responses:
  *       '200':
- *         description: Please Verified Your OTP
+ *         description: User verified successfully!!!
  */
 
 router.post('/VerifyOTP', async (req, res) => {
