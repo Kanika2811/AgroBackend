@@ -111,14 +111,20 @@ router.get('/subjects', verifyToken, function (req, res) {
  *         required: true
  *       - name: class_id
  *         in: formData
+ *         type: text
+ *         required: true
  *       - name: subject_name
  *         in: formData
+ *         type: text
+ *         required: true
  *       - name: medium
  *         in: formData
- *         required:
- *           - class_id
- *           - subject_name
- *           - medium
+ *         type: text
+ *         required: true
+ *       - name: subject_image
+ *         in: formData
+ *         type: file
+ *         required: true
  *     responses:
  *       '200':
  *         description: Added Subject successfully!!!
