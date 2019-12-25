@@ -108,7 +108,18 @@ router.get('/subjects', verifyToken, function (req, res) {
  *         schema:
  *           type: string
  *           format: uuid
- *         required: true  
+ *         required: true
+ *       - name: formData
+ *         in: formData
+ *         schema:
+ *           type: object
+ *           properties:
+ *             class_id:
+ *               type: string
+ *             subject_name:
+ *               type: string
+ *             medium:
+ *               type: string
  *         required:
  *           - class_id
  *           - subject_name
@@ -132,7 +143,7 @@ const upload = multer({
 
 router.post('/subjects', verifyToken, function (req, res) {
 
-
+   
     upload(req, res, (error) => {
         let addclass = {
             class_id,
@@ -186,7 +197,7 @@ router.post('/subjects', verifyToken, function (req, res) {
                 });
             } else {
                 console.log(req.file.location)
-                connection.query('insert into subject(subject_id,class_id,subject_name,medium,color_code,icons,created_timestamp,updated_timestamp) values(?,?,?,?,?,?,?,?)', [subjectId, class_id, subject_name, medium, color_code, req.file.location, Date.now(), Date.now()], function (error, rows, fields) {
+                connection.query('insert into subject(subject_id,class_id,subject_name,medium,color_code,icons,created_timestamp,updated_timestamp) values(?,?,?,?,?,?,?,?)', [subjectId, class_id, subject_name, medium, color_code,req.file.location, Date.now(), Date.now()], function (error, rows, fields) {
                     if (error) {
                         return res.json({
                             status: false,
