@@ -7,7 +7,8 @@ dt.format('Y-m-d H:M:S');
 const express = require('express');
 const router = express.Router();
 connection.query('USE ' + dbconfig.database);
-var verifyToken = require('../../../config/Verify')
+var verifyToken = require('../../../config/Verify');
+const nanoid = require('nanoid/generate');
 let chapterId = nanoid('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10);
 const aws = require('aws-sdk')
 const multer = require('multer')
