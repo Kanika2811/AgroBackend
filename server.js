@@ -59,7 +59,7 @@ const swaggerDefinition = {
 
   const options = {
 	swaggerDefinition,
-	apis: ['./app/routes/user/*.js','./app/routes/UserClass/*.js','./app/routes/subjects/*.js'],
+	apis: ['./app/routes/user/*.js','./app/routes/UserClass/*.js','./app/routes/subjects/*.js',,'./app/routes/chapters/*.js'],
   };
   const swaggerSpec = swaggerJSDoc(options);
 app.use(morgan('dev')); // log every request to the console
