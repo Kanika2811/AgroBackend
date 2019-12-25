@@ -38,8 +38,7 @@ module.exports = {
         }
     },
 
-    profileUpload : function(req,res)
-    {
+    profileUpload : function(req,res){
         let file = path.extname( req.body.imageUrl);
         const fileContent = fs.readFileSync( req.body.imageUrl);
         const secondsSinceEpoch = Date.now()  
@@ -56,6 +55,7 @@ module.exports = {
                 return res(filelocation);
             });
     }
+    
       
       
 }

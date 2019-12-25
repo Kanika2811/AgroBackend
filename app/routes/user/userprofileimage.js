@@ -25,44 +25,24 @@ aws.config.update({
 });
 
 const s3 = new aws.S3();
- 
-const uploadFile = (fileName) => {
-   const fileContent = fs.readFileSync(fileName);
-    const params = {
-        Bucket: 'mrb-data',
-        Key: 'profile_2.png', 
-       Body: fileContent
-    };
-    s3.upload(params, function(err, data) {
-        if (err) {
-            throw err;
-        }
-        console.log(`File uploaded successfully. ${data.Location}`);
-    });
-};
 
-const secondsSinceEpoch =Date.now() 
 const upload = multer({
     storage: multerS3({
       s3: s3,
-      bucket: 'mrb-data/profile_image',
+      bucket: 'mrb-data/profile_imag',
       acl: 'public-read',
       key: function (req, file, cb) {
-        cb(null, secondsSinceEpoch.toString())
+          console.log(file.originalname)
+        cb(null, file.originalname)
       }
     })
   }).single('profileImage');
 
 router.post('/profile', function(req,res){
-    CommonComponent.verifyToken(req,res);
-    let tokens = req.headers['authorization'];
-    tokens = tokens.substr(7);
-    connection.query("SELECT * FROM users where token=?",[tokens] ,function(err, rows,field) {
-        if (err)
-            return  res.json({status:false,message:"getting error",error:err});
-        if (rows.length) {
-            let user_id=rows[0].contact_no;
+   let user_id = '1234567890'
+   console.log(req.body.name)
             upload(req,res,(error)=>{
+                console.log(req.body.name)
 
                 if (req.fileValidationError) {
                     return res.send(req.fileValidationError);
@@ -113,28 +93,10 @@ router.post('/profile', function(req,res){
                         
                    }
                }
-            });
-
-
-        }
-        else{
-            return  res.status(401).send({status:401,message : 'User Unauthorized'})
-        }
-    });
-
-
-    
-    
+            });    
 })
 router.put('/profile', function(req,res){
-    CommonComponent.verifyToken(req,res);
-    let tokens = req.headers['authorization'];
-    tokens = tokens.substr(7);
-    connection.query("SELECT * FROM users where token=?",[tokens] ,function(err, rows,field) {
-        if (err)
-            return  res.json({status:false,message:"getting error",error:err});
-        if (rows.length) {
-            let user_id=rows[0].contact_no;
+    
             upload(req,res,(error)=>{
 
                 if (req.fileValidationError) {
@@ -187,17 +149,6 @@ router.put('/profile', function(req,res){
                    }
                }
             });
-
-
-        }
-        else{
-            return  res.status(401).send({status:401,message : 'User Unauthorized'})
-        }
-    });
-
-
-    
-    
 })
 
 
