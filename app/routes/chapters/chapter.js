@@ -8,7 +8,7 @@ const express = require('express');
 const router = express.Router();
 connection.query('USE ' + dbconfig.database);
 var verifyToken = require('../../../config/Verify')
-
+let chapterId = nanoid('1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 10);
 const aws = require('aws-sdk')
 const multer = require('multer')
 const multerS3 = require('multer-s3')
@@ -194,7 +194,7 @@ router.get('/chapters', verifyToken,function(req,res){
                     });
                 } else {
                     console.log(req.file.location)
-                    connection.query('insert into subject(subject_id,chapter_name,medium,color_code,icons,created_timestamp,updated_timestamp) values(?,?,?,?,?,?,?)', [subjectId, chapter_name, medium, color_code, req.file.location, Date.now(), Date.now()], function (error, rows, fields) {
+                    connection.query('insert into subject(chapter_id,subject_id,chapter_name,medium,color_code,icons,created_timestamp,updated_timestamp) values(?,?,?,?,?,?,?,?)', [chapterId,subject_id, chapter_name, medium, color_code, req.file.location, Date.now(), Date.now()], function (error, rows, fields) {
                         if (error) {
                             return res.json({
                                 status: false,
@@ -217,5 +217,147 @@ router.get('/chapters', verifyToken,function(req,res){
         });    
     });
 
+/**
+ * @swagger
+ * /api/v1/chapters:
+ *   put:
+ *     tags:
+ *       - Chapter
+ *     description: Update existing Chapter
+ *     consumes:
+ *       - multipart/form-data
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: x-access-token
+ *         in: header
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         required: true
+ *       - name: subject_name
+ *         in: formData
+ *         type: text
+ *         required: true
+ *       - name: medium
+ *         in: formData
+ *         type: text
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Successfully Updated
+ */
+router.put('/subjects', verifyToken, function (req, res) {
+    upload(req, res, (error) => {
+
+        if (req.fileValidationError) {
+            return res.send(req.fileValidationError);
+        } else if (error) {
+            return res.json({
+                status: false,
+                message: "getting error ",
+                error: error
+            });
+        }
+        let addclass = {
+            chapter_id,
+            chapter_name
+        } = req.body;
+        if (!(typeof chapter_id === 'string' ||
+                typeof chapter_name === 'string')) {
+            return res.json({
+                "status": false,
+                "message": "Invalid data provided"
+            });
+        }
+
+        if (chapter_id == '' || chapter_id === undefined) {
+            return res.json({
+                status: false,
+                Message: "Please Provide Chapter Id."
+            });
+        }
+        if (chapter_name == '' || chapter_name === undefined) {
+            return res.json({
+                status: false,
+                Message: "Please Provide Chapter Name."
+            });
+        }
+       
+        connection.query('select * from subject WHERE chapter_id', [chapter_id], function (error, rows, fields) {
+            if (error)
+                return res.json({
+                    status: false,
+                    message: "getting error",
+                    error: error
+                });
+            if (rows.length = 0) {
+                return res.json({
+                    "status": false,
+                    "message": "This Particular Chapter does not exist"
+                });
+            } else {
+
+                let sql = 'UPDATE chapters SET chapter_name = ? ,  updated_timestamp=? WHERE chapter_id = ?';
+                connection.query(sql, [chapter_name, medium, Date.now(), chapter_id], function (err, rows, fields) {
+                    if (err) {
+                        return res.json({
+                            status: false,
+                            message: "getting error",
+                            error: err
+                        });
+                    } else {
+                        connection.query('select * from chapters WHERE chapter_name = ?  and chapter_id=?', [chapter_name, chapters_id], function (error, rows, fields) {
+                            return res.json({
+                                "message": "Edit Subject successfully!!!",
+                                "data": rows[0]
+                            });
+                        });
+                    }
+                });
+            }
+        });
+    });
+})
+/**
+ * @swagger
+ * /api/v1/subjects:
+ *   delete:
+ *     tags:
+ *       - Subject
+ *     description: Deletes existing Subject
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: body
+ *         in: body
+ *         schema:
+ *           type: object
+ *           properties:
+ *             class_name:
+ *                type: String
+ *         required:
+ *           - class_name
+ *     responses:
+ *       200:
+ *         description: Class deleted successfully!!
+ */
+
+router.delete('/chapters', verifyToken, function (req, res) {
+    connection.query('DELETE FROM chapters WHERE chapters_id=?', [req.body.chapters_id], function (err, rows, fields) {
+        if (err) {
+            return res.json({
+                status: false,
+                message: "getting error",
+                error: err
+            });
+        } else {
+            return res.json({
+                "message": "Chapter deleted successfully!!"
+            })
+        }
+
+    });
+})
 
     module.exports = router;
