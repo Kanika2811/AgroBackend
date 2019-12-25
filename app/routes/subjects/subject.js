@@ -99,7 +99,7 @@ router.get('/subjects', verifyToken, function (req, res) {
  *       - Subject
  *     name: Insert New Subject
  *     consumes:
- *       - application/json
+ *       - multipart/form-data
  *     produces:
  *       - application/json
  *     parameters:
@@ -109,8 +109,8 @@ router.get('/subjects', verifyToken, function (req, res) {
  *           type: string
  *           format: uuid
  *         required: true
- *       - name: body
- *         in: body
+ *       - name: formData
+ *         in: formData
  *         schema:
  *           type: object
  *           properties:
