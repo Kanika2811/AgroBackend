@@ -249,11 +249,15 @@ router.post('/subjects', verifyToken, function (req, res) {
  *         required: true
  *       - name: subject_name
  *         in: formData
- *         type: text
+ *         type: string
  *         required: true
  *       - name: medium
  *         in: formData
- *         type: text
+ *         type: string
+ *         required: true
+ *       - name: subject_id
+ *         in: formData
+ *         type: string
  *         required: true
  *     responses:
  *       200:

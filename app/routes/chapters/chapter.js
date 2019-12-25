@@ -119,11 +119,11 @@ router.get('/chapters', verifyToken,function(req,res){
  *         required: true
  *       - name: subject_id
  *         in: formData
- *         type: text
+ *         type: string
  *         required: true
  *       - name: chapter_name
  *         in: formData
- *         type: text
+ *         type: string
  *         required: true
  *       - name: chapter_image
  *         in: formData
@@ -238,11 +238,15 @@ router.get('/chapters', verifyToken,function(req,res){
  *         required: true
  *       - name: subject_name
  *         in: formData
- *         type: text
+ *         type: string
  *         required: true
  *       - name: medium
  *         in: formData
- *         type: text
+ *         type: string
+ *         required: true
+ *       - name: chapter_id
+ *         in: formData
+ *         type: string
  *         required: true
  *     responses:
  *       200:
