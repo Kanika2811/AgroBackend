@@ -108,17 +108,7 @@ router.get('/subjects', verifyToken, function (req, res) {
  *         schema:
  *           type: string
  *           format: uuid
- *         required: true        
- *       - in: formData
- *         name: upfile
- *         type: file
- *         required: true
- *         description: The file to upload.
- *       - in: formData
- *         name: note
- *         type: string
- *         required: false
- *         description: Description of file contents
+ *         required: true  
  *         required:
  *           - class_id
  *           - subject_name
