@@ -109,17 +109,12 @@ router.get('/subjects', verifyToken, function (req, res) {
  *           type: string
  *           format: uuid
  *         required: true
- *       - name: formData
+ *       - name: class_id
  *         in: formData
- *         schema:
- *           type: object
- *           properties:
- *             class_id:
- *               type: string
- *             subject_name:
- *               type: string
- *             medium:
- *               type: string
+ *       - name: subject_name
+ *         in: formData
+ *       - name: medium
+ *         in: formData
  *         required:
  *           - class_id
  *           - subject_name
